@@ -1,0 +1,488 @@
+---
+interface Props {
+  initialActive?: "about" | "find";
+}
+
+const { initialActive = "about" } = Astro.props;
+
+const contacts = [
+  {
+    label: "Pixiv",
+    href: "https://www.pixiv.net/users/99990012",
+    note: "插画、角色图与公开作品入口",
+    meta: "pixiv.net/users/99990012",
+  },
+  {
+    label: "Email",
+    href: "mailto:hello@natsuki.cloud",
+    note: "正式联系、合作与长期沟通",
+    meta: "hello@natsuki.cloud",
+  },
+  {
+    label: "X / Twitter",
+    note: "短消息与近况入口，后续补齐",
+    meta: "coming soon",
+  },
+  {
+    label: "Bilibili",
+    note: "待补充",
+    meta: "coming soon",
+  },
+];
+
+const profileItems = [
+  {
+    title: "中文",
+    text: "奈月喜欢安静、月光、柔软的夜色，以及一点点黑猫气质。",
+  },
+  {
+    title: "日本語",
+    text: "しずかな夜、月明かり、やわらかい空気。",
+    lang: "ja",
+  },
+  {
+    title: "English",
+    text: "A quiet personal home for links, notes, and small signals.",
+  },
+];
+
+const formatChecks = [
+  "长中文测试：如果这一行内容很长，也应该自然换行，不挤出卡片边界。",
+  "Mixed text: Natsuki / 奈月 / しずく / contact@example.com",
+  "符号测试：#月亮 @黑猫 2026-06-17 v0.1.0",
+  "日文混排测试：月明かりの下で、奈月はゆっくり深呼吸する。",
+  "英文长句测试：The layout should stay calm even when a sentence keeps going for a while.",
+  "超长标识测试：natsuki-cloud-profile-demo-long-token-2026-06-17",
+];
+
+const timelineItems = [
+  {
+    time: "00:12",
+    title: "夜间窗口",
+    text: "背景图较暗时，半透明卡片需要保持文字清晰。",
+  },
+  {
+    time: "07:30",
+    title: "晨间检查",
+    text: "短标题、状态标签和小段文字需要在同一行内保持节奏。",
+  },
+  {
+    time: "22:45",
+    title: "长内容滚动",
+    text: "这一段用于确认宽屏高度下也能自然触发页面滚动，并且 sticky 顶栏不会遮挡内容。",
+  },
+];
+
+const longProfileNotes = [
+  {
+    title: "长段落测试",
+    text: "这一段专门用来拉开关于页和联系页的高度差。实际内容替换后，如果个人介绍比联系方式长很多，页面也应该只展示当前面板的开头，并且高度过渡保持自然。",
+  },
+  {
+    title: "多语言段落",
+    text: "奈月 / Natsuki / なつき / Moonlight room / soft signal. 这里混合中文、日文假名、英文和符号，确认字体、行高与换行在长内容里仍然稳定。",
+  },
+  {
+    title: "窄屏换行",
+    text: "在手机布局下，这段文字会自然换成多行；卡片不应该产生横向滚动，也不应该因为长单词或长路径撑破页面。",
+  },
+  {
+    title: "未来内容",
+    text: "之后这里可以替换成真实的自我介绍、站点说明、偏好、创作方向或展示索引。当前 demo 的目标是让各种内容形态先把布局边界暴露出来。",
+  },
+];
+
+const profileParagraphs = [
+  "个人主页的内容不会像博客一样持续堆叠文章，因此首页需要承担更清楚的自我介绍职责：名字、气质、入口、一些轻量说明，以及未来可能扩展的展示模块。",
+  "这条长段落用于模拟真实介绍文本。它包含比较长的中文句子、English fragments、日文かな，以及一些标识符 natsuki-cloud-profile-long-content-check，用来检查文本在宽屏和窄屏下的表现。",
+  "如果用户从页面中部切到另一张卡片，新的卡片应该从开头开始阅读。这里故意加长关于页，让调试时更容易发现滚动位置、容器高度和横向滑动之间的关系。",
+];
+
+const detailRows = [
+  ["Name", "奈月 / Natsuki / なつき"],
+  ["Theme", "moonlight, quiet room, black cat, soft purple"],
+  ["Mode", "profile demo, contact demo, responsive layout"],
+  ["Long Value", "this-is-a-long-key-value-row-used-to-test-wrapping-in-a-small-definition-like-layout"],
+];
+
+const noticeItems = [
+  "这是一条普通提示，用来测试浅色通知块。",
+  "这是带有中日英混排的提示：奈月 / Natsuki / 月明かり。",
+  "这是一条较长提示，检查在手机宽度下能否换行，并且不会撑开轮播宽度。",
+];
+
+const contactTimeline = [
+  {
+    time: "DM",
+    title: "短消息",
+    text: "适合简单问候、链接补充、平台状态更新。这里测试短标签与说明文字的组合。",
+  },
+  {
+    time: "MAIL",
+    title: "正式邮件",
+    text: "适合合作、长期沟通、需要上下文的说明。这里测试英文缩写与中文正文混排。",
+  },
+  {
+    time: "SNS",
+    title: "公开平台",
+    text: "适合公开作品入口。链接较长时需要自然换行，不影响卡片宽度。",
+  },
+];
+
+const contactNotes = [
+  "联系页补充内容 A：这里放一段偏长说明，用来确认宽屏滚动时当前卡片自身高度足够。",
+  "联系页补充内容 B：如果未来平台很多，卡片内部应该继续自然增长，而不是压缩成难读的布局。",
+  "联系页补充内容 C：Natsuki / 奈月 / なつき / hello@natsuki.cloud / 99990012。",
+];
+
+const tabs = [
+  { href: "/", label: "关于奈月", key: "about" },
+  { href: "/find/", label: "找到奈月", key: "find" },
+];
+---
+
+<main class="kawaii-shell page-shell" data-home-shell data-active={initialActive}>
+  <header class="topbar">
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深色模式" aria-pressed="false">
+      <svg class="moon-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M19.5 14.5A8.5 8.5 0 0 1 9.5 4.5a8.5 8.5 0 1 0 10 10Z" />
+      </svg>
+    </button>
+
+    <nav class="topnav" aria-label="页面切换">
+      <span class="topnav-indicator" aria-hidden="true"></span>
+      {tabs.map((tab) => (
+        <a
+          href={tab.href}
+          data-tab-target={tab.key}
+          aria-current={tab.key === initialActive ? "page" : undefined}
+        >
+          {tab.label}
+        </a>
+      ))}
+    </nav>
+  </header>
+
+  <section class="card-stage" aria-live="polite">
+    <div class="card-viewport">
+      <div class="card-track">
+        <div class="card-panel">
+          <article class="sample-card" data-card-panel="about">
+            <div class="sample-inner">
+              <p class="sample-kicker">Profile Demo / 关于奈月</p>
+              <h1 class="sample-title">关于奈月</h1>
+              <p class="sample-copy">
+                这里先放一组排版 demo，用来测试中文、日文、英文、数字、符号和长句在同一张卡片里的显示效果。
+                最终内容可以继续替换，但布局应该保持稳定。
+              </p>
+
+              <div class="sample-card-accent">
+                <span class="sample-chip">中文简体</span>
+                <span class="sample-chip" lang="ja">日本語</span>
+                <span class="sample-chip">English</span>
+                <span class="sample-chip">1234567890</span>
+              </div>
+
+              <div class="demo-grid">
+                {profileItems.map((item) => (
+                  <section class="demo-block">
+                    <h2>{item.title}</h2>
+                    <p lang={item.lang}>{item.text}</p>
+                  </section>
+                ))}
+              </div>
+
+              <blockquote class="demo-quote">
+                “这是一个个人主页，不是博客。内容要轻，信息要清楚，风格要可爱但不能吵。”
+              </blockquote>
+
+              <ul class="demo-list">
+                {formatChecks.map((item) => <li>{item}</li>)}
+              </ul>
+
+              <div class="demo-timeline" aria-label="时间线示例">
+                {timelineItems.map((item) => (
+                  <section class="demo-timeline-item">
+                    <time>{item.time}</time>
+                    <div>
+                      <h2>{item.title}</h2>
+                      <p>{item.text}</p>
+                    </div>
+                  </section>
+                ))}
+              </div>
+
+              <div class="demo-table" aria-label="键值信息示例">
+                {detailRows.map(([label, value]) => (
+                  <div>
+                    <span>{label}</span>
+                    <strong>{value}</strong>
+                  </div>
+                ))}
+              </div>
+
+              <div class="demo-notices">
+                {noticeItems.map((item) => <p>{item}</p>)}
+              </div>
+
+              <div class="demo-grid" aria-label="更长介绍内容测试">
+                {longProfileNotes.map((item) => (
+                  <section class="demo-block">
+                    <h2>{item.title}</h2>
+                    <p>{item.text}</p>
+                  </section>
+                ))}
+              </div>
+
+              <div class="demo-notices">
+                {profileParagraphs.map((item) => <p>{item}</p>)}
+              </div>
+
+              <dl class="sample-meta">
+                <div>
+                  <dt>用途</dt>
+                  <dd>页面介绍 / profile</dd>
+                </div>
+                <div>
+                  <dt>主题</dt>
+                  <dd>月亮、黑猫、夜色</dd>
+                </div>
+                <div>
+                  <dt>代码样式</dt>
+                  <dd><code>natsuki.cloud</code></dd>
+                </div>
+              </dl>
+            </div>
+          </article>
+        </div>
+
+        <div class="card-panel">
+          <article class="sample-card" data-card-panel="find">
+            <div class="sample-inner">
+              <p class="sample-kicker">Contact Demo / 找到奈月</p>
+              <h1 class="sample-title">找到奈月</h1>
+              <p class="sample-copy">
+                这里测试外链、邮箱、待补充状态、长地址和说明文字。未来实际社交媒体内容可以直接替换这些 demo。
+              </p>
+
+              <div class="contact-grid">
+                {contacts.map((item) =>
+                  item.href ? (
+                    <a
+                      class="contact-card"
+                      href={item.href}
+                      target={item.href.startsWith("http") ? "_blank" : undefined}
+                      rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+                    >
+                      <div class="contact-card-head">
+                        <h2>{item.label}</h2>
+                        <span class="contact-pill">入口</span>
+                      </div>
+                      <p>{item.note}</p>
+                      <span class="contact-meta">{item.meta}</span>
+                    </a>
+                  ) : (
+                    <div class="contact-card contact-card--pending">
+                      <div class="contact-card-head">
+                        <h2>{item.label}</h2>
+                        <span class="contact-pill contact-pill--muted">待补充</span>
+                      </div>
+                      <p>{item.note}</p>
+                      <span class="contact-meta">{item.meta}</span>
+                    </div>
+                  ),
+                )}
+              </div>
+
+              <div class="demo-toolbar" aria-label="状态示例">
+                <span class="demo-status">可用</span>
+                <span class="demo-status demo-status--idle">待补充</span>
+                <span class="demo-status demo-status--soft">低频回复</span>
+                <span class="demo-status">外链</span>
+                <span class="demo-status demo-status--idle">邮箱</span>
+              </div>
+
+              <div class="demo-notices">
+                <p>测试普通说明：联系方式页通常会包含较短的入口、较长的平台说明，以及未来需要替换的真实链接。</p>
+                <p>测试混排说明：Pixiv / Email / Bilibili / 奈月 / 月明かり / natsuki.cloud。</p>
+                <p>测试长链接说明：https://example.com/natsuki/contact/demo/path/with/a/very-long-segment</p>
+              </div>
+
+              <div class="demo-table" aria-label="联系偏好示例">
+                <div>
+                  <span>Business</span>
+                  <strong>hello@natsuki.cloud</strong>
+                </div>
+                <div>
+                  <span>Artwork</span>
+                  <strong>pixiv.net/users/99990012</strong>
+                </div>
+                <div>
+                  <span>Status</span>
+                  <strong>部分平台稍后补充</strong>
+                </div>
+              </div>
+
+              <div class="demo-timeline" aria-label="联系流程示例">
+                {contactTimeline.map((item) => (
+                  <section class="demo-timeline-item">
+                    <time>{item.time}</time>
+                    <div>
+                      <h2>{item.title}</h2>
+                      <p>{item.text}</p>
+                    </div>
+                  </section>
+                ))}
+              </div>
+
+              <ul class="demo-list">
+                {contactNotes.map((item) => <li>{item}</li>)}
+              </ul>
+
+              <dl class="sample-meta">
+                <div>
+                  <dt>优先级</dt>
+                  <dd>Email > Pixiv > 其他平台</dd>
+                </div>
+                <div>
+                  <dt>响应</dt>
+                  <dd>普通留言不保证即时回复</dd>
+                </div>
+                <div>
+                  <dt>长文本</dt>
+                  <dd>long-link-and-mixed-content-demo</dd>
+                </div>
+              </dl>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script is:inline>
+  (() => {
+    const shell = document.querySelector("[data-home-shell]");
+
+    if (!shell) {
+      return;
+    }
+
+    const links = [...shell.querySelectorAll("[data-tab-target]")];
+    const stage = shell.querySelector(".card-stage");
+    const themeToggle = shell.querySelector("[data-theme-toggle]");
+    const pathToState = () => location.pathname.startsWith("/find") ? "find" : "about";
+    const themeStorageKey = "natsuki-theme";
+    const darkScheme = matchMedia("(prefers-color-scheme: dark)");
+    const themeColors = {
+      light: "#fff4f8",
+      dark: "#17111f",
+    };
+
+    const getStoredTheme = () => {
+      try {
+        const theme = localStorage.getItem(themeStorageKey);
+        return theme === "dark" || theme === "light" ? theme : null;
+      } catch {
+        return null;
+      }
+    };
+
+    const getSystemTheme = () => darkScheme.matches ? "dark" : "light";
+
+    const applyTheme = (theme) => {
+      const activeTheme = theme === "dark" ? "dark" : "light";
+      document.documentElement.dataset.theme = activeTheme;
+      document.documentElement.style.colorScheme = activeTheme;
+      document.querySelector("[data-theme-color]")?.setAttribute("content", themeColors[activeTheme]);
+      themeToggle?.setAttribute("aria-pressed", String(activeTheme === "dark"));
+      themeToggle?.setAttribute("aria-label", activeTheme === "dark" ? "切换浅色模式" : "切换深色模式");
+    };
+
+    const updatePanelHeight = (active = shell.dataset.active) => {
+      const card = shell.querySelector(`[data-card-panel="${active}"]`);
+
+      if (!stage || !card) {
+        return;
+      }
+
+      const rootFontSize = Number.parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+      const panelBlockSize = card.getBoundingClientRect().height / rootFontSize;
+      stage.style.setProperty("--active-panel-block-size", `${panelBlockSize}rem`);
+    };
+
+    const setActive = (next, shouldPush = false, shouldResetScroll = false) => {
+      const active = next === "find" ? "find" : "about";
+
+      if (shouldResetScroll && active !== shell.dataset.active) {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      }
+
+      updatePanelHeight(active);
+      shell.dataset.active = active;
+
+      links.forEach((link) => {
+        const isCurrent = link.dataset.tabTarget === active;
+        if (isCurrent) {
+          link.setAttribute("aria-current", "page");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+
+      if (shouldPush) {
+        const href = active === "find" ? "/find/" : "/";
+        history.pushState({ active }, "", href);
+      }
+    };
+
+    const queueHeightUpdate = () => {
+      requestAnimationFrame(() => updatePanelHeight());
+    };
+
+    links.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        setActive(link.dataset.tabTarget, true, true);
+      });
+    });
+
+    themeToggle?.addEventListener("click", () => {
+      const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+
+      try {
+        if (nextTheme === getSystemTheme()) {
+          localStorage.removeItem(themeStorageKey);
+        } else {
+          localStorage.setItem(themeStorageKey, nextTheme);
+        }
+      } catch {
+        // Theme switching should still work when storage is unavailable.
+      }
+
+      applyTheme(nextTheme);
+    });
+
+    darkScheme.addEventListener("change", () => {
+      if (!getStoredTheme()) {
+        applyTheme(getSystemTheme());
+      }
+    });
+
+    window.addEventListener("popstate", () => {
+      setActive(pathToState(), false, true);
+    });
+
+    window.addEventListener("resize", queueHeightUpdate);
+
+    if ("ResizeObserver" in window) {
+      const resizeObserver = new ResizeObserver(queueHeightUpdate);
+      shell.querySelectorAll("[data-card-panel]").forEach((card) => resizeObserver.observe(card));
+    }
+
+    setActive(pathToState(), false);
+    applyTheme(getStoredTheme() || getSystemTheme());
+    document.fonts?.ready?.then(queueHeightUpdate);
+  })();
+</script>

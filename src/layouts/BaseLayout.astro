@@ -8,7 +8,7 @@ interface Props {
 
 const {
   title,
-  description = "奈月的个人主页，收纳自设、投稿、记录和一些小小的创作。",
+  description = "奈月的个人主页，收纳页面介绍、社交媒体和联系方式。",
 } = Astro.props;
 ---
 
@@ -18,88 +18,42 @@ const {
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
-    <meta name="theme-color" content="#fff4f8" />
+    <meta name="theme-color" content="#fff4f8" data-theme-color />
+    <script is:inline>
+      (() => {
+        const storageKey = "natsuki-theme";
+        const darkQuery = "(prefers-color-scheme: dark)";
+        const themeColors = {
+          light: "#fff4f8",
+          dark: "#17111f",
+        };
+        const getStoredTheme = () => {
+          try {
+            const theme = localStorage.getItem(storageKey);
+            return theme === "dark" || theme === "light" ? theme : null;
+          } catch {
+            return null;
+          }
+        };
+        const systemTheme = () => matchMedia(darkQuery).matches ? "dark" : "light";
+        const theme = getStoredTheme() || systemTheme();
+
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+        document.querySelector("[data-theme-color]")?.setAttribute("content", themeColors[theme]);
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
   <body>
-    <script is:inline data-astro-rerun>
-      (() => {
-        const getRouteKey = () => location.pathname.startsWith("/find") ? "find" : "about";
-        const getTargetDirection = (target) => target === "find" ? "right" : "left";
-        let routeNavTimer;
-
-        window.natsukiSyncRouteNav = (active = getRouteKey()) => {
-          const nav = document.querySelector("[data-route-nav]");
-
-          if (!nav) {
-            return;
-          }
-
-          nav.dataset.active = active;
-
-          nav.querySelectorAll("[data-nav-target]").forEach((link) => {
-            const isCurrent = link.dataset.navTarget === active;
-
-            if (isCurrent) {
-              link.setAttribute("aria-current", "page");
-              return;
-            }
-
-            link.removeAttribute("aria-current");
-          });
-        };
-
-        window.natsukiClearRouteState = () => {
-          window.setTimeout(() => {
-            document.documentElement.removeAttribute("data-route-leaving");
-            document.documentElement.removeAttribute("data-route-entering");
-            document.documentElement.removeAttribute("data-nav-direction");
-            sessionStorage.removeItem("natsuki-nav-direction");
-          }, 760);
-        };
-
-        window.natsukiRouteClick = (event, link) => {
-          const current = getRouteKey();
-          const target = link?.dataset?.navTarget;
-
-          if (!target || target === current) {
-            return true;
-          }
-
-          event.preventDefault();
-
-          const direction = getTargetDirection(target);
-          document.documentElement.dataset.navDirection = direction;
-          document.documentElement.dataset.routeLeaving = direction;
-          sessionStorage.setItem("natsuki-nav-direction", direction);
-          window.natsukiSyncRouteNav(target);
-
-          window.clearTimeout(routeNavTimer);
-          routeNavTimer = window.setTimeout(() => {
-            location.href = link.href;
-          }, 290);
-
-          return false;
-        };
-
-        const direction = sessionStorage.getItem("natsuki-nav-direction");
-
-        if (!direction) {
-          return;
-        }
-
-        document.documentElement.dataset.navDirection = direction;
-        document.documentElement.dataset.routeEntering = direction;
-      })();
-    </script>
     <slot />
-    <script is:inline data-astro-rerun>
-      (() => {
-        window.natsukiSyncRouteNav?.();
-        window.natsukiClearRouteState?.();
-      })();
-    </script>
   </body>
 </html>
