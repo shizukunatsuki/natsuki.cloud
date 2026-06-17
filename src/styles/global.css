@@ -41,6 +41,7 @@ html[data-theme="dark"] {
 html {
   min-block-size: 100%;
   overflow-x: clip;
+  scrollbar-gutter: stable;
   background: #f6efff;
 }
 
@@ -811,7 +812,8 @@ html[data-theme="dark"] .demo-timeline-item time {
     transform 220ms var(--spring),
     border-color 180ms ease,
     background 180ms ease,
-    color 180ms ease;
+    color 180ms ease,
+    box-shadow 220ms ease;
 }
 
 html[data-theme="dark"] .demo-code button,
@@ -823,6 +825,42 @@ html[data-theme="dark"] .demo-button {
 .demo-code button {
   flex: 0 0 auto;
   padding-inline: 0.78rem;
+}
+
+.demo-code button[data-copy-state="success"] {
+  border-color: rgb(139 207 190 / 40%);
+  background: rgb(221 247 236 / 72%);
+  color: #4f7168;
+}
+
+.demo-code button[data-copy-state="selected"] {
+  border-color: rgb(188 167 223 / 42%);
+  background: rgb(238 230 255 / 76%);
+  color: #66517c;
+}
+
+.demo-code button[data-copy-state="error"] {
+  border-color: rgb(243 165 196 / 42%);
+  background: rgb(255 225 237 / 78%);
+  color: #865168;
+}
+
+html[data-theme="dark"] .demo-code button[data-copy-state="success"] {
+  border-color: rgb(155 217 200 / 28%);
+  background: rgb(73 121 107 / 28%);
+  color: #c7f0e2;
+}
+
+html[data-theme="dark"] .demo-code button[data-copy-state="selected"] {
+  border-color: rgb(199 176 239 / 30%);
+  background: rgb(88 68 112 / 32%);
+  color: #eadfff;
+}
+
+html[data-theme="dark"] .demo-code button[data-copy-state="error"] {
+  border-color: rgb(240 160 191 / 30%);
+  background: rgb(141 72 100 / 26%);
+  color: #ffd8e5;
 }
 
 .demo-code button:hover,
@@ -968,10 +1006,35 @@ html[data-theme="dark"] .demo-button:disabled:active {
 .contact-card {
   display: grid;
   gap: 0.72rem;
+  transition:
+    transform 260ms var(--spring),
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 220ms ease;
+}
+
+a.contact-card:hover,
+a.contact-card:focus-visible {
+  transform: translateY(-0.1rem);
+  border-color: rgb(126 96 132 / 18%);
+  background: rgb(255 255 255 / 46%);
+  box-shadow: 0 0.78rem 1.9rem rgb(85 55 85 / 8%);
+}
+
+html[data-theme="dark"] a.contact-card:hover,
+html[data-theme="dark"] a.contact-card:focus-visible {
+  border-color: rgb(239 220 255 / 18%);
+  background: rgb(255 255 255 / 9%);
+  box-shadow: 0 0.78rem 1.9rem rgb(0 0 0 / 18%);
+}
+
+a.contact-card:active {
+  transform: translateY(0.02rem) scale(0.992);
 }
 
 .contact-card--pending {
   color: var(--muted);
+  cursor: default;
 }
 
 .contact-card-head {

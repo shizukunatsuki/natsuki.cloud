@@ -1,6 +1,8 @@
 # natsuki.cloud
 
-Personal site built with Astro, TypeScript, and Tailwind CSS.
+Personal site built with Astro and TypeScript, deployed as a Cloudflare Worker.
+
+The current page copy is placeholder/demo content for layout and UX testing. Replace future production content from `src/data/siteContent.ts` first; the Astro components are intended to stay mostly structural.
 
 ## Development
 
@@ -15,11 +17,10 @@ npm run dev
 npm run build
 ```
 
-## Cloudflare Pages
+## Cloudflare Worker
 
-Use these settings:
+```sh
+npm run deploy
+```
 
-- Framework preset: `Astro`
-- Build command: `npm run build`
-- Build output directory: `dist`
-- Node.js version: current LTS or newer
+Worker settings live in `wrangler.jsonc`. The build output is generated in `dist`.

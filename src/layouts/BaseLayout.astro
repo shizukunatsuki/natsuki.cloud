@@ -1,15 +1,17 @@
 ---
 import "@/styles/global.css";
+import { siteMeta, themeConfig } from "@/data/siteContent";
 
 interface Props {
-  title: string;
+  title?: string;
   description?: string;
 }
 
 const {
-  title,
-  description = "奈月的个人主页，收纳页面介绍、社交媒体和联系方式。",
+  title = siteMeta.defaultTitle,
+  description = siteMeta.defaultDescription,
 } = Astro.props;
+const canonicalUrl = new URL(Astro.url.pathname, siteMeta.url).toString();
 ---
 
 <!doctype html>
@@ -17,16 +19,19 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="theme-color" content="#fff4f8" data-theme-color />
-    <script is:inline>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content={themeConfig.colors.light} data-theme-color />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:site_name" content={siteMeta.name} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta name="twitter:card" content="summary" />
+    <script is:inline define:vars={{ themeConfig }}>
       (() => {
-        const storageKey = "natsuki-theme";
-        const darkQuery = "(prefers-color-scheme: dark)";
-        const themeColors = {
-          light: "#fff4f8",
-          dark: "#17111f",
-        };
+        const { storageKey, darkQuery, colors: themeColors } = themeConfig;
         const getStoredTheme = () => {
           try {
             const theme = localStorage.getItem(storageKey);

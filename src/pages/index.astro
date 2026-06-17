@@ -1,8 +1,9 @@
 ---
 import HomeShell from "@/components/HomeShell.astro";
+import { pages } from "@/data/siteContent";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="奈月 | natsuki.cloud" description="奈月的个人主页，留一张示例卡片来介绍页面本身。">
+<BaseLayout title={pages.about.title} description={pages.about.description}>
   <HomeShell initialActive="about" />
 </BaseLayout>

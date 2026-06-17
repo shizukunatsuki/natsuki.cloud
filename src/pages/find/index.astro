@@ -1,8 +1,9 @@
 ---
 import HomeShell from "@/components/HomeShell.astro";
+import { pages } from "@/data/siteContent";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="找到奈月 | natsuki.cloud" description="奈月的社交媒体和联系方式聚合页。">
+<BaseLayout title={pages.find.title} description={pages.find.description}>
   <HomeShell initialActive="find" />
 </BaseLayout>
