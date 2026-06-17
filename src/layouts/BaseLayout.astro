@@ -1,0 +1,105 @@
+---
+import "@/styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = "奈月的个人主页，收纳自设、投稿、记录和一些小小的创作。",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="theme-color" content="#fff4f8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <script is:inline data-astro-rerun>
+      (() => {
+        const getRouteKey = () => location.pathname.startsWith("/find") ? "find" : "about";
+        const getTargetDirection = (target) => target === "find" ? "right" : "left";
+        let routeNavTimer;
+
+        window.natsukiSyncRouteNav = (active = getRouteKey()) => {
+          const nav = document.querySelector("[data-route-nav]");
+
+          if (!nav) {
+            return;
+          }
+
+          nav.dataset.active = active;
+
+          nav.querySelectorAll("[data-nav-target]").forEach((link) => {
+            const isCurrent = link.dataset.navTarget === active;
+
+            if (isCurrent) {
+              link.setAttribute("aria-current", "page");
+              return;
+            }
+
+            link.removeAttribute("aria-current");
+          });
+        };
+
+        window.natsukiClearRouteState = () => {
+          window.setTimeout(() => {
+            document.documentElement.removeAttribute("data-route-leaving");
+            document.documentElement.removeAttribute("data-route-entering");
+            document.documentElement.removeAttribute("data-nav-direction");
+            sessionStorage.removeItem("natsuki-nav-direction");
+          }, 760);
+        };
+
+        window.natsukiRouteClick = (event, link) => {
+          const current = getRouteKey();
+          const target = link?.dataset?.navTarget;
+
+          if (!target || target === current) {
+            return true;
+          }
+
+          event.preventDefault();
+
+          const direction = getTargetDirection(target);
+          document.documentElement.dataset.navDirection = direction;
+          document.documentElement.dataset.routeLeaving = direction;
+          sessionStorage.setItem("natsuki-nav-direction", direction);
+          window.natsukiSyncRouteNav(target);
+
+          window.clearTimeout(routeNavTimer);
+          routeNavTimer = window.setTimeout(() => {
+            location.href = link.href;
+          }, 290);
+
+          return false;
+        };
+
+        const direction = sessionStorage.getItem("natsuki-nav-direction");
+
+        if (!direction) {
+          return;
+        }
+
+        document.documentElement.dataset.navDirection = direction;
+        document.documentElement.dataset.routeEntering = direction;
+      })();
+    </script>
+    <slot />
+    <script is:inline data-astro-rerun>
+      (() => {
+        window.natsukiSyncRouteNav?.();
+        window.natsukiClearRouteState?.();
+      })();
+    </script>
+  </body>
+</html>

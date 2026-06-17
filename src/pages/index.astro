@@ -1,0 +1,66 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const links = [
+  { href: "/", label: "关于奈月", key: "about", current: true },
+  { href: "/find/", label: "找到奈月", key: "find", current: false },
+];
+---
+
+<BaseLayout title="奈月 | natsuki.cloud" description="奈月的个人主页，留一张示例卡片来介绍页面本身。">
+  <main class="kawaii-shell page-shell">
+    <header class="topbar">
+      <a class="moon-link" href="/" aria-label="返回首页">
+        <svg class="moon-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M19.5 14.5A8.5 8.5 0 0 1 9.5 4.5a8.5 8.5 0 1 0 10 10Z" />
+        </svg>
+      </a>
+      <nav class="topnav" data-route-nav data-active="about">
+        <span class="topnav-indicator" aria-hidden="true"></span>
+        {links.map((link) => (
+          <a
+            href={link.href}
+            data-nav-target={link.key}
+            aria-current={link.current ? "page" : undefined}
+            onclick="return window.natsukiRouteClick(event, this)"
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+    </header>
+
+    <section class="intro-stage">
+      <article id="intro" class="sample-card">
+        <div class="sample-inner">
+          <p class="sample-kicker">关于奈月 / sample card</p>
+          <h1 class="sample-title">奈月的主页</h1>
+          <p class="sample-copy">
+            这是一个偏可爱二次元风的个人主页，不是博客，也不预留投稿列表。
+            这里主要放页面介绍、少量外链和联系入口，内容尽量轻，视觉尽量明确。
+          </p>
+          <div class="sample-card-accent">
+            <span class="sample-chip">粉紫配色</span>
+            <span class="sample-chip">黑猫元素</span>
+            <span class="sample-chip">柔软图案</span>
+            <span class="sample-chip">单卡片布局</span>
+          </div>
+          <dl class="sample-meta">
+            <div>
+              <dt>页面用途</dt>
+              <dd>个人主页，不是博客</dd>
+            </div>
+            <div>
+              <dt>按钮含义</dt>
+              <dd>关于奈月、找到奈月</dd>
+            </div>
+            <div>
+              <dt>风格方向</dt>
+              <dd>可爱、安静、带一点夜色感</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+    </section>
+  </main>
+</BaseLayout>
