@@ -13,7 +13,6 @@
   --slide-duration: 720ms;
   --slide-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --spring: cubic-bezier(0.18, 0.9, 0.24, 1.12);
-  --soft-ease: cubic-bezier(0.2, 0.8, 0.24, 1);
   --radius-large: 2rem;
   --radius-medium: 1.15rem;
   --radius-pill: 999rem;
@@ -231,7 +230,10 @@ html[data-theme="dark"] .theme-toggle:focus-visible {
 
 .theme-toggle:focus-visible,
 .topnav a:focus-visible,
-.contact-card:focus-visible {
+.contact-card:focus-visible,
+.demo-button:focus-visible,
+.demo-code button:focus-visible,
+.link-list a:focus-visible {
   outline: 0.16rem solid rgb(188 167 223 / 70%);
   outline-offset: 0.18rem;
 }
@@ -356,7 +358,6 @@ html[data-theme="dark"] .topnav-indicator {
   background: rgb(255 253 255 / 58%);
   backdrop-filter: blur(1.35rem) saturate(1.08);
   -webkit-backdrop-filter: blur(1.35rem) saturate(1.08);
-  animation: card-enter 560ms var(--soft-ease) both;
 }
 
 html[data-theme="dark"] .sample-card {
@@ -373,11 +374,6 @@ html[data-theme="dark"] .sample-card {
   align-content: start;
   gap: clamp(1.35rem, 2.5vw, 2.1rem);
   padding: clamp(1.4rem, 5%, 4.4rem);
-}
-
-.motion-item {
-  animation: content-rise 560ms var(--soft-ease) both;
-  animation-delay: calc(var(--item-index, 0) * 55ms);
 }
 
 .sample-hero {
@@ -515,7 +511,9 @@ html[data-theme="dark"] .demo-status--soft {
 .demo-section {
   display: grid;
   gap: 0.9rem;
+  inline-size: 100%;
   max-inline-size: 58rem;
+  min-inline-size: 0;
 }
 
 .demo-section--split {
@@ -557,7 +555,9 @@ html[data-theme="dark"] .demo-status--soft {
 .sample-meta div,
 .contact-card,
 .preference-card,
-.demo-code {
+.demo-code,
+.link-list,
+.action-demo {
   border: 0.0625rem solid rgb(126 96 132 / 10%);
   border-radius: var(--radius-medium);
   background: rgb(255 255 255 / 34%);
@@ -575,7 +575,9 @@ html[data-theme="dark"] .sample-meta div,
 html[data-theme="dark"] .contact-card,
 html[data-theme="dark"] .sample-chip,
 html[data-theme="dark"] .preference-card,
-html[data-theme="dark"] .demo-code {
+html[data-theme="dark"] .demo-code,
+html[data-theme="dark"] .link-list,
+html[data-theme="dark"] .action-demo {
   border-color: rgb(239 220 255 / 11%);
   background: rgb(255 255 255 / 6%);
 }
@@ -585,6 +587,8 @@ html[data-theme="dark"] .demo-code {
 .demo-panel,
 .preference-card,
 .demo-code,
+.link-list,
+.action-demo,
 .sample-meta div,
 .contact-card {
   min-inline-size: 0;
@@ -627,29 +631,6 @@ html[data-theme="dark"] .contact-meta {
   overflow-wrap: anywhere;
 }
 
-.demo-block,
-.demo-timeline-item,
-.contact-card[href],
-.preference-card {
-  transition:
-    transform 260ms var(--spring),
-    border-color 180ms ease,
-    background 180ms ease;
-}
-
-.demo-block:hover,
-.preference-card:hover {
-  transform: translateY(-0.08rem);
-  border-color: rgb(126 96 132 / 16%);
-  background: rgb(255 255 255 / 48%);
-}
-
-html[data-theme="dark"] .demo-block:hover,
-html[data-theme="dark"] .preference-card:hover {
-  border-color: rgb(239 220 255 / 18%);
-  background: rgb(255 255 255 / 9%);
-}
-
 .demo-block h3,
 .preference-card h3,
 .contact-card h3,
@@ -687,7 +668,6 @@ html[data-theme="dark"] .preference-card:hover {
   align-content: center;
   margin: 0;
   padding: 1rem 1.05rem 1rem 1.2rem;
-  border-inline-start: 0.22rem solid rgb(243 165 196 / 58%);
   border-radius: var(--radius-medium);
   color: #6f6075;
   background: rgb(255 255 255 / 24%);
@@ -697,7 +677,6 @@ html[data-theme="dark"] .preference-card:hover {
 }
 
 html[data-theme="dark"] .demo-quote {
-  border-inline-start-color: rgb(240 160 191 / 64%);
   color: #d9cedf;
   background: rgb(255 255 255 / 5%);
 }
@@ -773,15 +752,6 @@ html[data-theme="dark"] .demo-table div + div {
   padding: 0.92rem;
 }
 
-.demo-timeline-item:hover {
-  transform: translateX(0.08rem);
-  background: rgb(255 255 255 / 44%);
-}
-
-html[data-theme="dark"] .demo-timeline-item:hover {
-  background: rgb(255 255 255 / 9%);
-}
-
 .demo-timeline-item time {
   color: #8b718f;
   font-size: 0.86rem;
@@ -806,8 +776,49 @@ html[data-theme="dark"] .demo-timeline-item time {
   gap: 0.6rem;
 }
 
+.demo-code-head {
+  min-inline-size: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.demo-code button,
+.demo-button {
+  min-block-size: 2.1rem;
+  border: 0.0625rem solid rgb(126 96 132 / 12%);
+  border-radius: var(--radius-pill);
+  background: rgb(255 255 255 / 44%);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+html[data-theme="dark"] .demo-code button,
+html[data-theme="dark"] .demo-button {
+  border-color: rgb(239 220 255 / 12%);
+  background: rgb(255 255 255 / 8%);
+}
+
+.demo-code button {
+  flex: 0 0 auto;
+  padding-inline: 0.78rem;
+}
+
+.demo-code pre {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
 .demo-code code {
   display: block;
+  min-inline-size: 0;
+  max-inline-size: 100%;
   color: var(--ink);
   font-family: ui-monospace, "SFMono-Regular", "Menlo", monospace;
   font-size: 0.88rem;
@@ -815,6 +826,66 @@ html[data-theme="dark"] .demo-timeline-item time {
   line-height: 1.7;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+}
+
+.link-list,
+.action-demo {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.link-list p,
+.action-demo p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+  font-weight: 600;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.link-list strong {
+  display: block;
+  margin-block-end: 0.22rem;
+  color: var(--ink);
+}
+
+.link-list a {
+  color: #71527a;
+  font-weight: 800;
+  text-decoration-line: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+  overflow-wrap: anywhere;
+}
+
+html[data-theme="dark"] .link-list a {
+  color: #e6c9ef;
+}
+
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.demo-button {
+  padding-inline: 0.9rem;
+}
+
+.demo-button--primary {
+  border-color: rgb(243 165 196 / 34%);
+  background: rgb(255 230 241 / 72%);
+}
+
+html[data-theme="dark"] .demo-button--primary {
+  border-color: rgb(240 160 191 / 28%);
+  background: rgb(141 72 100 / 28%);
+}
+
+.demo-button:disabled {
+  color: rgb(127 113 133 / 66%);
+  cursor: not-allowed;
 }
 
 .sample-meta dt {
@@ -841,17 +912,6 @@ html[data-theme="dark"] .demo-timeline-item time {
 .contact-card {
   display: grid;
   gap: 0.72rem;
-}
-
-.contact-card[href]:hover {
-  transform: translateY(-0.08rem);
-  border-color: rgb(126 96 132 / 18%);
-  background: rgb(255 255 255 / 56%);
-}
-
-html[data-theme="dark"] .contact-card[href]:hover {
-  border-color: rgb(239 220 255 / 19%);
-  background: rgb(255 255 255 / 9%);
 }
 
 .contact-card--pending {
@@ -893,30 +953,6 @@ html[data-theme="dark"] .contact-pill {
 html[data-theme="dark"] .contact-pill--muted {
   color: #d7c9eb;
   background: rgb(88 68 112 / 34%);
-}
-
-@keyframes card-enter {
-  from {
-    opacity: 0;
-    transform: translateY(0.7rem) scale(0.992);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes content-rise {
-  from {
-    opacity: 0;
-    transform: translateY(0.55rem);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 @media (max-width: 60rem) {
@@ -1007,6 +1043,8 @@ html[data-theme="dark"] .contact-pill--muted {
   .demo-panel,
   .preference-card,
   .demo-code,
+  .link-list,
+  .action-demo,
   .contact-card,
   .sample-meta div {
     padding: 0.88rem;

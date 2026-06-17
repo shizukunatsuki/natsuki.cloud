@@ -133,6 +133,41 @@ const calloutItems = [
   "长提示：如果未来这里放站点说明、更新状态或免责声明，也应该自然增长并保持可读。",
 ];
 
+const inlineLinks = [
+  {
+    label: "内部链接示例",
+    href: "/find/",
+    text: "跳转到找到奈月，用来测试普通文本链接在正文中的样式。",
+  },
+  {
+    label: "外部链接示例",
+    href: "https://www.pixiv.net/users/99990012",
+    text: "打开 Pixiv 主页，用来测试外链、换行和 focus 状态。",
+  },
+  {
+    label: "邮件链接示例",
+    href: "mailto:hello@natsuki.cloud",
+    text: "发送邮件，用来测试 mailto 链接和长地址展示。",
+  },
+];
+
+const actionDemos = [
+  {
+    label: "普通按钮",
+    result: "已触发普通按钮：用于测试按钮点击后的状态文本。",
+  },
+  {
+    label: "强调按钮",
+    result: "已触发强调按钮：未来可以替换成复制、展开或筛选动作。",
+    tone: "primary",
+  },
+  {
+    label: "禁用按钮",
+    result: "禁用按钮不会触发，这里只测试视觉状态。",
+    disabled: true,
+  },
+];
+
 const contactPreferences = [
   {
     title: "正式联系",
@@ -216,7 +251,7 @@ const tabs = [
         <div class="card-panel">
           <article class="sample-card" data-card-panel="about">
             <div class="sample-inner">
-              <section class="sample-hero motion-item" style="--item-index: 0">
+              <section class="sample-hero">
                 <p class="sample-kicker">Profile Surface / 关于奈月</p>
                 <h1 class="sample-title">关于奈月</h1>
                 <p class="sample-copy">
@@ -242,7 +277,7 @@ const tabs = [
                 </div>
               </section>
 
-              <section class="demo-section motion-item" style="--item-index: 1">
+              <section class="demo-section">
                 <div class="section-heading">
                   <h2>小卡片排版</h2>
                   <p>测试等宽网格、短标题、长说明和多语言内容。</p>
@@ -258,7 +293,7 @@ const tabs = [
                 </div>
               </section>
 
-              <section class="demo-section demo-section--split motion-item" style="--item-index: 2">
+              <section class="demo-section demo-section--split">
                 <blockquote class="demo-quote">
                   “这里不是博客列表，而是一个干净的入口页面。内容可以很轻，但边界测试必须足够重。”
                 </blockquote>
@@ -275,7 +310,7 @@ const tabs = [
                 </div>
               </section>
 
-              <section class="demo-section motion-item" style="--item-index: 3">
+              <section class="demo-section">
                 <div class="section-heading">
                   <h2>多语言与长文本</h2>
                   <p>验证 Noto 字体系、长 token 和不同语言在同一区域的表现。</p>
@@ -291,14 +326,17 @@ const tabs = [
                 </div>
               </section>
 
-              <section class="demo-section demo-section--split motion-item" style="--item-index: 4">
+              <section class="demo-section demo-section--split">
                 <div class="demo-code" aria-label="代码片段示例">
-                  <span>demo.config.ts</span>
-                  <code>{`export const profile = {
+                  <div class="demo-code-head">
+                    <span>demo.config.ts</span>
+                    <button type="button" data-copy-button>复制</button>
+                  </div>
+                  <pre><code>{`export const profile = {
   name: "奈月",
   theme: ["moon", "cat", "violet"],
   updated: "2026-06-17",
-};`}</code>
+};`}</code></pre>
                 </div>
 
                 <div class="demo-notices">
@@ -306,7 +344,41 @@ const tabs = [
                 </div>
               </section>
 
-              <section class="demo-section motion-item" style="--item-index: 5">
+              <section class="demo-section">
+                <div class="section-heading">
+                  <h2>链接与按钮测试</h2>
+                  <p>这些仍然是 demo。正式内容迁移时，只需要替换数据和文案，不需要依赖固定长度。</p>
+                </div>
+
+                <div class="link-list" aria-label="普通超链接示例">
+                  {inlineLinks.map((item) => (
+                    <p>
+                      <strong>{item.label}</strong>
+                      <a href={item.href} target={item.href.startsWith("http") ? "_blank" : undefined} rel={item.href.startsWith("http") ? "noreferrer" : undefined}>
+                        {item.text}
+                      </a>
+                    </p>
+                  ))}
+                </div>
+
+                <div class="action-demo" data-action-demo>
+                  <div class="action-row">
+                    {actionDemos.map((item) => (
+                      <button
+                        class:list={["demo-button", item.tone === "primary" && "demo-button--primary"]}
+                        type="button"
+                        data-demo-action={item.result}
+                        disabled={item.disabled}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                  <p data-demo-action-output>按钮状态：尚未触发。</p>
+                </div>
+              </section>
+
+              <section class="demo-section">
                 <div class="section-heading">
                   <h2>时间线与键值表</h2>
                   <p>这里故意让内容更长，用来测试宽屏下的页面滚动和顶栏沉浸状态。</p>
@@ -334,7 +406,7 @@ const tabs = [
                 </dl>
               </section>
 
-              <section class="demo-section motion-item" style="--item-index: 6">
+              <section class="demo-section">
                 <div class="section-heading">
                   <h2>更长内容块</h2>
                   <p>让关于页明显长于联系页，便于检查不同高度面板切换和滚动位置重置。</p>
@@ -356,7 +428,7 @@ const tabs = [
         <div class="card-panel">
           <article class="sample-card" data-card-panel="find">
             <div class="sample-inner">
-              <section class="sample-hero motion-item" style="--item-index: 0">
+              <section class="sample-hero">
                 <p class="sample-kicker">Contact Surface / 找到奈月</p>
                 <h1 class="sample-title">找到奈月</h1>
                 <p class="sample-copy">
@@ -373,7 +445,7 @@ const tabs = [
                 </div>
               </section>
 
-              <section class="demo-section motion-item" style="--item-index: 1">
+              <section class="demo-section">
                 <div class="section-heading">
                   <h2>入口卡片</h2>
                   <p>测试链接、不可点击状态、长 meta 文本和 hover 反馈。</p>
@@ -409,7 +481,7 @@ const tabs = [
                 </div>
               </section>
 
-              <section class="demo-section demo-section--split motion-item" style="--item-index: 2">
+              <section class="demo-section demo-section--split">
                 <div class="preference-grid">
                   {contactPreferences.map((item) => (
                     <section class="preference-card">
@@ -432,7 +504,7 @@ const tabs = [
                 </div>
               </section>
 
-              <section class="demo-section motion-item" style="--item-index: 3">
+              <section class="demo-section">
                 <div class="section-heading">
                   <h2>联系方式表</h2>
                   <p>测试键值布局、长 URL 和不同文字长度。</p>
@@ -448,7 +520,7 @@ const tabs = [
                 </div>
               </section>
 
-              <section class="demo-section motion-item" style="--item-index: 4">
+              <section class="demo-section">
                 <div class="section-heading">
                   <h2>联系流程</h2>
                   <p>比关于页短一些，用来验证两张不同高度卡片之间的过渡。</p>
@@ -467,14 +539,17 @@ const tabs = [
                 </div>
               </section>
 
-              <section class="demo-section demo-section--split motion-item" style="--item-index: 5">
+              <section class="demo-section demo-section--split">
                 <div class="demo-code" aria-label="链接配置示例">
-                  <span>links.json</span>
-                  <code>{`{
+                  <div class="demo-code-head">
+                    <span>links.json</span>
+                    <button type="button" data-copy-button>复制</button>
+                  </div>
+                  <pre><code>{`{
   "pixiv": "https://www.pixiv.net/users/99990012",
   "email": "hello@natsuki.cloud",
   "status": "soft contact"
-}`}</code>
+}`}</code></pre>
                 </div>
 
                 <dl class="sample-meta">
@@ -512,6 +587,8 @@ const tabs = [
     const stage = shell.querySelector(".card-stage");
     const topbar = shell.querySelector(".topbar");
     const themeToggle = shell.querySelector("[data-theme-toggle]");
+    const copyButtons = [...shell.querySelectorAll("[data-copy-button]")];
+    const actionButtons = [...shell.querySelectorAll("[data-demo-action]")];
     const pathToState = () => location.pathname.startsWith("/find") ? "find" : "about";
     const themeStorageKey = "natsuki-theme";
     const topbarIdleDelay = 820;
@@ -609,6 +686,43 @@ const tabs = [
       scheduleTopbarIdleState();
     };
 
+    const copyText = async (text) => {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.insetBlockStart = "-100vh";
+        document.body.append(textarea);
+        textarea.select();
+
+        try {
+          const execCopy = document["exec" + "Command"];
+          return typeof execCopy === "function" && execCopy.call(document, "copy");
+        } catch {
+          return false;
+        } finally {
+          textarea.remove();
+        }
+      }
+    };
+
+    const selectCode = (codeElement) => {
+      if (!codeElement) {
+        return false;
+      }
+
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(codeElement);
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+      return true;
+    };
+
     const setActive = (next, shouldPush = false, shouldResetScroll = false) => {
       const active = next === "find" ? "find" : "about";
 
@@ -647,6 +761,36 @@ const tabs = [
       link.addEventListener("click", (event) => {
         event.preventDefault();
         setActive(link.dataset.tabTarget, true, true);
+      });
+    });
+
+    copyButtons.forEach((button) => {
+      button.addEventListener("click", async () => {
+        const codeElement = button.closest(".demo-code")?.querySelector("code");
+        const code = codeElement?.textContent?.trim();
+
+        if (!code) {
+          return;
+        }
+
+        if (await copyText(code)) {
+          button.textContent = "已复制";
+        } else {
+          button.textContent = selectCode(codeElement) ? "已选中" : "复制失败";
+        }
+
+        window.setTimeout(() => {
+          button.textContent = "复制";
+        }, 1400);
+      });
+    });
+
+    actionButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const output = button.closest("[data-action-demo]")?.querySelector("[data-demo-action-output]");
+        if (output) {
+          output.textContent = `按钮状态：${button.dataset.demoAction}`;
+        }
       });
     });
 
