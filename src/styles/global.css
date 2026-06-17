@@ -66,15 +66,23 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: -2;
-  background:
+  background-color: #f6efff;
+  background-image:
     linear-gradient(90deg, rgb(255 246 251 / 18%), rgb(246 239 255 / 32%)),
-    url("/art/natsuki-background.png") center / cover no-repeat;
+    url("/art/natsuki-background.png");
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
+  background-size: auto, cover;
 }
 
 html[data-theme="dark"] body::before {
-  background:
+  background-color: var(--paper);
+  background-image:
     linear-gradient(90deg, rgb(16 10 25 / 70%), rgb(27 17 40 / 62%)),
-    url("/art/natsuki-background.png") center / cover no-repeat;
+    url("/art/natsuki-background.png");
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
+  background-size: auto, cover;
 }
 
 body::after {
@@ -120,6 +128,7 @@ a {
   position: sticky;
   inset-block-start: clamp(0.75rem, 2dvh, 1.2rem);
   z-index: 10;
+  isolation: isolate;
   inline-size: 100%;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
@@ -129,12 +138,45 @@ a {
   border: 0.0625rem solid rgb(117 88 123 / 12%);
   border-radius: var(--radius-pill);
   background: rgb(255 253 253 / 76%);
-  backdrop-filter: blur(0.8rem);
+  box-shadow: 0 0.85rem 1.8rem rgb(85 55 85 / 8%);
+  backdrop-filter: blur(1rem) saturate(1.04);
 }
 
 html[data-theme="dark"] .topbar {
   border-color: rgb(239 220 255 / 12%);
   background: rgb(28 21 38 / 74%);
+  box-shadow: 0 0.9rem 2rem rgb(0 0 0 / 22%);
+}
+
+.topbar::before,
+.topbar::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.topbar::before {
+  inset: -0.5rem -0.7rem -0.7rem;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgb(255 247 252 / 48%), rgb(255 247 252 / 14%) 62%, transparent);
+  filter: blur(0.45rem);
+}
+
+.topbar::after {
+  inset-block-start: calc(100% - 0.12rem);
+  inset-inline: 1.2rem;
+  block-size: 1.5rem;
+  background: linear-gradient(180deg, rgb(255 247 252 / 28%), transparent);
+  filter: blur(0.35rem);
+}
+
+html[data-theme="dark"] .topbar::before {
+  background: linear-gradient(180deg, rgb(23 17 31 / 58%), rgb(23 17 31 / 20%) 62%, transparent);
+}
+
+html[data-theme="dark"] .topbar::after {
+  background: linear-gradient(180deg, rgb(23 17 31 / 34%), transparent);
 }
 
 .theme-toggle {
@@ -782,15 +824,21 @@ html[data-theme="dark"] .contact-pill--muted {
 
 @media (max-width: 48rem) {
   body::before {
-    background:
+    background-image:
       linear-gradient(90deg, rgb(255 246 251 / 10%), rgb(246 239 255 / 30%)),
-      url("/art/natsuki-background.png") 18% center / cover no-repeat;
+      url("/art/natsuki-background.png");
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
+    background-size: auto, cover;
   }
 
   html[data-theme="dark"] body::before {
-    background:
+    background-image:
       linear-gradient(90deg, rgb(16 10 25 / 66%), rgb(27 17 40 / 64%)),
-      url("/art/natsuki-background.png") 18% center / cover no-repeat;
+      url("/art/natsuki-background.png");
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
+    background-size: auto, cover;
   }
 
   .page-shell {
