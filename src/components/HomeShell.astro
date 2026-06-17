@@ -5,134 +5,181 @@ interface Props {
 
 const { initialActive = "about" } = Astro.props;
 
-const contacts = [
+const contactLinks = [
   {
     label: "Pixiv",
     href: "https://www.pixiv.net/users/99990012",
-    note: "插画、角色图与公开作品入口",
+    note: "插画、角色图与公开作品入口。用于测试外链卡片、长说明与小字号元信息。",
     meta: "pixiv.net/users/99990012",
+    tag: "作品",
   },
   {
     label: "Email",
     href: "mailto:hello@natsuki.cloud",
-    note: "正式联系、合作与长期沟通",
+    note: "正式联系、合作与长期沟通。邮箱卡片需要在浅色和深色主题下保持清晰。",
     meta: "hello@natsuki.cloud",
+    tag: "优先",
   },
   {
-    label: "X / Twitter",
-    note: "短消息与近况入口，后续补齐",
-    meta: "coming soon",
+    label: "Social",
+    note: "短消息与近况入口，当前作为占位状态展示。测试不可点击卡片的视觉层级。",
+    meta: "coming soon / 待补充",
+    tag: "稍后",
   },
   {
-    label: "Bilibili",
-    note: "待补充",
-    meta: "coming soon",
+    label: "Archive",
+    note: "未来可能放作品索引、长期链接或公开资料。测试很长的英文标识换行。",
+    meta: "natsuki-public-archive-demo-entry-with-long-token",
+    tag: "索引",
   },
 ];
 
-const profileItems = [
+const profileCards = [
   {
-    title: "中文",
-    text: "奈月喜欢安静、月光、柔软的夜色，以及一点点黑猫气质。",
+    title: "角色气质",
+    text: "安静、月光、柔软的夜色，以及一点点黑猫的距离感。",
   },
   {
     title: "日本語",
-    text: "しずかな夜、月明かり、やわらかい空気。",
+    text: "しずかな夜、月明かり、やわらかい空気。長い文章でも自然に折り返す。",
     lang: "ja",
   },
   {
     title: "English",
-    text: "A quiet personal home for links, notes, and small signals.",
+    text: "A calm personal home for identity, links, and small signals.",
+  },
+  {
+    title: "排版目标",
+    text: "内容密度要足够测试边界，但视觉上仍然保持轻、软、干净。",
   },
 ];
 
-const formatChecks = [
-  "长中文测试：如果这一行内容很长，也应该自然换行，不挤出卡片边界。",
-  "Mixed text: Natsuki / 奈月 / しずく / contact@example.com",
-  "符号测试：#月亮 @黑猫 2026-06-17 v0.1.0",
-  "日文混排测试：月明かりの下で、奈月はゆっくり深呼吸する。",
-  "英文长句测试：The layout should stay calm even when a sentence keeps going for a while.",
-  "超长标识测试：natsuki-cloud-profile-demo-long-token-2026-06-17",
+const heroStats = [
+  ["Name", "奈月"],
+  ["Kana", "しずく なつき"],
+  ["Theme", "moon / cat / violet"],
+];
+
+const typographyChecks = [
+  {
+    label: "中文长句",
+    value: "如果这是一段真实的个人介绍，文字会自然换行，不应该撑破卡片，也不应该让行距变得拥挤。",
+  },
+  {
+    label: "日本語",
+    value: "月明かりの下で、奈月はゆっくり深呼吸する。漢字とかなが混ざっても同じ質感を保つ。",
+    lang: "ja",
+  },
+  {
+    label: "English",
+    value: "The layout should stay calm when English fragments appear beside Chinese and Japanese text.",
+  },
+  {
+    label: "长标识",
+    value: "natsuki-cloud-profile-demo-long-token-2026-06-17-with-extra-segment",
+  },
+];
+
+const rhythmItems = [
+  "短句测试。",
+  "中等长度测试：这一行包含中文、English、数字 2026 和符号 #moon。",
+  "长句测试：当真实内容替换 demo 后，页面仍然需要在桌面宽屏、窄屏手机、深色模式和浅色模式下保持一致的阅读节奏。",
+  "日文混排：しずかな夜 / 月明かり / やわらかい空気。",
 ];
 
 const timelineItems = [
   {
     time: "00:12",
     title: "夜间窗口",
-    text: "背景图较暗时，半透明卡片需要保持文字清晰。",
+    text: "背景图较暗时，mica 卡片需要保持文字清晰，并让顶栏进入沉浸态时不显得突兀。",
   },
   {
     time: "07:30",
     title: "晨间检查",
-    text: "短标题、状态标签和小段文字需要在同一行内保持节奏。",
+    text: "短标题、状态标签、小段说明和密集信息块需要同时出现，用来观察视觉层级。",
   },
   {
     time: "22:45",
     title: "长内容滚动",
-    text: "这一段用于确认宽屏高度下也能自然触发页面滚动，并且 sticky 顶栏不会遮挡内容。",
+    text: "这里故意加入更多内容，让宽屏也能触发滚动，从而测试顶栏隐藏、卡片高度和横向切换。",
   },
 ];
 
-const longProfileNotes = [
+const featureNotes = [
   {
-    title: "长段落测试",
-    text: "这一段专门用来拉开关于页和联系页的高度差。实际内容替换后，如果个人介绍比联系方式长很多，页面也应该只展示当前面板的开头，并且高度过渡保持自然。",
+    title: "可替换内容",
+    text: "之后这里可以换成真实自我介绍、作品方向、常用入口或轻量状态，不需要改变页面结构。",
   },
   {
-    title: "多语言段落",
-    text: "奈月 / Natsuki / なつき / Moonlight room / soft signal. 这里混合中文、日文假名、英文和符号，确认字体、行高与换行在长内容里仍然稳定。",
+    title: "不同高度",
+    text: "关于页内容比联系页更长，用来验证不同高度面板之间切换时，外层高度过渡仍然自然。",
   },
   {
-    title: "窄屏换行",
-    text: "在手机布局下，这段文字会自然换成多行；卡片不应该产生横向滚动，也不应该因为长单词或长路径撑破页面。",
+    title: "边界测试",
+    text: "包含长词、长链接、列表、表格、引用和代码片段，尽量提前暴露未来内容替换可能造成的问题。",
   },
-  {
-    title: "未来内容",
-    text: "之后这里可以替换成真实的自我介绍、站点说明、偏好、创作方向或展示索引。当前 demo 的目标是让各种内容形态先把布局边界暴露出来。",
-  },
-];
-
-const profileParagraphs = [
-  "个人主页的内容不会像博客一样持续堆叠文章，因此首页需要承担更清楚的自我介绍职责：名字、气质、入口、一些轻量说明，以及未来可能扩展的展示模块。",
-  "这条长段落用于模拟真实介绍文本。它包含比较长的中文句子、English fragments、日文かな，以及一些标识符 natsuki-cloud-profile-long-content-check，用来检查文本在宽屏和窄屏下的表现。",
-  "如果用户从页面中部切到另一张卡片，新的卡片应该从开头开始阅读。这里故意加长关于页，让调试时更容易发现滚动位置、容器高度和横向滑动之间的关系。",
 ];
 
 const detailRows = [
-  ["Name", "奈月 / Natsuki / なつき"],
-  ["Theme", "moonlight, quiet room, black cat, soft purple"],
-  ["Mode", "profile demo, contact demo, responsive layout"],
+  ["Name", "奈月 / Natsuki / しずく なつき"],
+  ["Mood", "quiet room, crescent moon, black cat, soft violet"],
+  ["Layout", "responsive, mica card, sliding panels, sticky topbar"],
   ["Long Value", "this-is-a-long-key-value-row-used-to-test-wrapping-in-a-small-definition-like-layout"],
 ];
 
-const noticeItems = [
-  "这是一条普通提示，用来测试浅色通知块。",
-  "这是带有中日英混排的提示：奈月 / Natsuki / 月明かり。",
-  "这是一条较长提示，检查在手机宽度下能否换行，并且不会撑开轮播宽度。",
+const calloutItems = [
+  "提示块测试：短内容需要像轻量便签，而不是厚重卡片。",
+  "混排提示：奈月 / Natsuki / 月明かり / hello@natsuki.cloud。",
+  "长提示：如果未来这里放站点说明、更新状态或免责声明，也应该自然增长并保持可读。",
+];
+
+const contactPreferences = [
+  {
+    title: "正式联系",
+    text: "合作、长期沟通、需要上下文的说明优先使用 Email。",
+    value: "Email",
+  },
+  {
+    title: "作品入口",
+    text: "公开插画、角色图、作品存档优先从 Pixiv 进入。",
+    value: "Pixiv",
+  },
+  {
+    title: "短消息",
+    text: "短消息入口后续补齐，目前用于测试待补充状态。",
+    value: "Soon",
+  },
+];
+
+const contactRows = [
+  ["Primary", "hello@natsuki.cloud"],
+  ["Artwork", "pixiv.net/users/99990012"],
+  ["Status", "部分平台稍后补充"],
+  ["Long URL", "https://example.com/natsuki/contact/demo/path/with/a/very-long-segment"],
 ];
 
 const contactTimeline = [
   {
-    time: "DM",
-    title: "短消息",
-    text: "适合简单问候、链接补充、平台状态更新。这里测试短标签与说明文字的组合。",
+    time: "Step 1",
+    title: "确认入口",
+    text: "先选择合适的平台。这里测试英文 step 标签、中文标题和说明文字的组合。",
   },
   {
-    time: "MAIL",
-    title: "正式邮件",
-    text: "适合合作、长期沟通、需要上下文的说明。这里测试英文缩写与中文正文混排。",
+    time: "Step 2",
+    title: "补充上下文",
+    text: "正式联系建议包含目的、时间、链接和必要附件。长段文字也应稳定换行。",
   },
   {
-    time: "SNS",
-    title: "公开平台",
-    text: "适合公开作品入口。链接较长时需要自然换行，不影响卡片宽度。",
+    time: "Step 3",
+    title: "等待回复",
+    text: "普通留言不保证即时回复。这个区块用于测试较短页面和长页面之间的高度差。",
   },
 ];
 
 const contactNotes = [
-  "联系页补充内容 A：这里放一段偏长说明，用来确认宽屏滚动时当前卡片自身高度足够。",
-  "联系页补充内容 B：如果未来平台很多，卡片内部应该继续自然增长，而不是压缩成难读的布局。",
-  "联系页补充内容 C：Natsuki / 奈月 / なつき / hello@natsuki.cloud / 99990012。",
+  "联系页列表测试：短条目。",
+  "联系页列表测试：中等长度条目，包含 Pixiv / Email / Bilibili / 奈月 / 月明かり。",
+  "联系页列表测试：long-link-and-mixed-content-demo-with-many-characters-to-check-line-breaking。",
 ];
 
 const tabs = [
@@ -169,89 +216,139 @@ const tabs = [
         <div class="card-panel">
           <article class="sample-card" data-card-panel="about">
             <div class="sample-inner">
-              <p class="sample-kicker">Profile Demo / 关于奈月</p>
-              <h1 class="sample-title">关于奈月</h1>
-              <p class="sample-copy">
-                这里先放一组排版 demo，用来测试中文、日文、英文、数字、符号和长句在同一张卡片里的显示效果。
-                最终内容可以继续替换，但布局应该保持稳定。
-              </p>
+              <section class="sample-hero motion-item" style="--item-index: 0">
+                <p class="sample-kicker">Profile Surface / 关于奈月</p>
+                <h1 class="sample-title">关于奈月</h1>
+                <p class="sample-copy">
+                  这是个人主页的内容卡片 demo，用来测试真实内容替换前的排版边界：
+                  中日英混排、长句、短标签、列表、表格、代码片段、不同高度区块和页面滚动。
+                </p>
 
-              <div class="sample-card-accent">
-                <span class="sample-chip">中文简体</span>
-                <span class="sample-chip" lang="ja">日本語</span>
-                <span class="sample-chip">English</span>
-                <span class="sample-chip">1234567890</span>
-              </div>
+                <div class="sample-card-accent" aria-label="标签示例">
+                  <span class="sample-chip">中文简体</span>
+                  <span class="sample-chip" lang="ja">日本語</span>
+                  <span class="sample-chip">English</span>
+                  <span class="sample-chip">2026.06</span>
+                  <span class="sample-chip">soft mica</span>
+                </div>
 
-              <div class="demo-grid">
-                {profileItems.map((item) => (
-                  <section class="demo-block">
-                    <h2>{item.title}</h2>
-                    <p lang={item.lang}>{item.text}</p>
-                  </section>
-                ))}
-              </div>
-
-              <blockquote class="demo-quote">
-                “这是一个个人主页，不是博客。内容要轻，信息要清楚，风格要可爱但不能吵。”
-              </blockquote>
-
-              <ul class="demo-list">
-                {formatChecks.map((item) => <li>{item}</li>)}
-              </ul>
-
-              <div class="demo-timeline" aria-label="时间线示例">
-                {timelineItems.map((item) => (
-                  <section class="demo-timeline-item">
-                    <time>{item.time}</time>
-                    <div>
-                      <h2>{item.title}</h2>
-                      <p>{item.text}</p>
+                <div class="hero-stats" aria-label="基础信息示例">
+                  {heroStats.map(([label, value]) => (
+                    <div class="hero-stat">
+                      <span>{label}</span>
+                      <strong>{value}</strong>
                     </div>
-                  </section>
-                ))}
-              </div>
-
-              <div class="demo-table" aria-label="键值信息示例">
-                {detailRows.map(([label, value]) => (
-                  <div>
-                    <span>{label}</span>
-                    <strong>{value}</strong>
-                  </div>
-                ))}
-              </div>
-
-              <div class="demo-notices">
-                {noticeItems.map((item) => <p>{item}</p>)}
-              </div>
-
-              <div class="demo-grid" aria-label="更长介绍内容测试">
-                {longProfileNotes.map((item) => (
-                  <section class="demo-block">
-                    <h2>{item.title}</h2>
-                    <p>{item.text}</p>
-                  </section>
-                ))}
-              </div>
-
-              <div class="demo-notices">
-                {profileParagraphs.map((item) => <p>{item}</p>)}
-              </div>
-
-              <dl class="sample-meta">
-                <div>
-                  <dt>用途</dt>
-                  <dd>页面介绍 / profile</dd>
+                  ))}
                 </div>
-                <div>
-                  <dt>主题</dt>
-                  <dd>月亮、黑猫、夜色</dd>
+              </section>
+
+              <section class="demo-section motion-item" style="--item-index: 1">
+                <div class="section-heading">
+                  <h2>小卡片排版</h2>
+                  <p>测试等宽网格、短标题、长说明和多语言内容。</p>
                 </div>
-                <div>
-                  <dt>代码样式</dt>
-                  <dd><code>natsuki.cloud</code></dd>
+
+                <div class="demo-grid demo-grid--four">
+                  {profileCards.map((item) => (
+                    <section class="demo-block">
+                      <h3>{item.title}</h3>
+                      <p lang={item.lang}>{item.text}</p>
+                    </section>
+                  ))}
                 </div>
-              </dl>
+              </section>
+
+              <section class="demo-section demo-section--split motion-item" style="--item-index: 2">
+                <blockquote class="demo-quote">
+                  “这里不是博客列表，而是一个干净的入口页面。内容可以很轻，但边界测试必须足够重。”
+                </blockquote>
+
+                <div class="demo-panel">
+                  <h2>阅读节奏</h2>
+                  <p>
+                    这个面板测试较长段落。真实内容可能会介绍名字、角色气质、展示入口和一些偏好。
+                    即使段落变长，卡片也应该只自然增长，不产生横向滚动。
+                  </p>
+                  <ul class="demo-list">
+                    {rhythmItems.map((item) => <li>{item}</li>)}
+                  </ul>
+                </div>
+              </section>
+
+              <section class="demo-section motion-item" style="--item-index: 3">
+                <div class="section-heading">
+                  <h2>多语言与长文本</h2>
+                  <p>验证 Noto 字体系、长 token 和不同语言在同一区域的表现。</p>
+                </div>
+
+                <div class="demo-table" aria-label="字体和换行测试">
+                  {typographyChecks.map((item) => (
+                    <div>
+                      <span>{item.label}</span>
+                      <strong lang={item.lang}>{item.value}</strong>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section class="demo-section demo-section--split motion-item" style="--item-index: 4">
+                <div class="demo-code" aria-label="代码片段示例">
+                  <span>demo.config.ts</span>
+                  <code>{`export const profile = {
+  name: "奈月",
+  theme: ["moon", "cat", "violet"],
+  updated: "2026-06-17",
+};`}</code>
+                </div>
+
+                <div class="demo-notices">
+                  {calloutItems.map((item) => <p>{item}</p>)}
+                </div>
+              </section>
+
+              <section class="demo-section motion-item" style="--item-index: 5">
+                <div class="section-heading">
+                  <h2>时间线与键值表</h2>
+                  <p>这里故意让内容更长，用来测试宽屏下的页面滚动和顶栏沉浸状态。</p>
+                </div>
+
+                <div class="demo-timeline" aria-label="时间线示例">
+                  {timelineItems.map((item) => (
+                    <section class="demo-timeline-item">
+                      <time>{item.time}</time>
+                      <div>
+                        <h3>{item.title}</h3>
+                        <p>{item.text}</p>
+                      </div>
+                    </section>
+                  ))}
+                </div>
+
+                <dl class="sample-meta">
+                  {detailRows.map(([label, value]) => (
+                    <div>
+                      <dt>{label}</dt>
+                      <dd>{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </section>
+
+              <section class="demo-section motion-item" style="--item-index: 6">
+                <div class="section-heading">
+                  <h2>更长内容块</h2>
+                  <p>让关于页明显长于联系页，便于检查不同高度面板切换和滚动位置重置。</p>
+                </div>
+
+                <div class="demo-grid">
+                  {featureNotes.map((item) => (
+                    <section class="demo-block demo-block--wide">
+                      <h3>{item.title}</h3>
+                      <p>{item.text}</p>
+                    </section>
+                  ))}
+                </div>
+              </section>
             </div>
           </article>
         </div>
@@ -259,100 +356,142 @@ const tabs = [
         <div class="card-panel">
           <article class="sample-card" data-card-panel="find">
             <div class="sample-inner">
-              <p class="sample-kicker">Contact Demo / 找到奈月</p>
-              <h1 class="sample-title">找到奈月</h1>
-              <p class="sample-copy">
-                这里测试外链、邮箱、待补充状态、长地址和说明文字。未来实际社交媒体内容可以直接替换这些 demo。
-              </p>
+              <section class="sample-hero motion-item" style="--item-index: 0">
+                <p class="sample-kicker">Contact Surface / 找到奈月</p>
+                <h1 class="sample-title">找到奈月</h1>
+                <p class="sample-copy">
+                  这里是社交媒体和联系方式聚合页 demo。它测试外链、邮箱、待补充状态、长链接、状态标签、
+                  可点击卡片和不可点击卡片的视觉差异。
+                </p>
 
-              <div class="contact-grid">
-                {contacts.map((item) =>
-                  item.href ? (
-                    <a
-                      class="contact-card"
-                      href={item.href}
-                      target={item.href.startsWith("http") ? "_blank" : undefined}
-                      rel={item.href.startsWith("http") ? "noreferrer" : undefined}
-                    >
-                      <div class="contact-card-head">
-                        <h2>{item.label}</h2>
-                        <span class="contact-pill">入口</span>
+                <div class="demo-toolbar" aria-label="状态示例">
+                  <span class="demo-status">可用</span>
+                  <span class="demo-status demo-status--idle">待补充</span>
+                  <span class="demo-status demo-status--soft">低频回复</span>
+                  <span class="demo-status">外链</span>
+                  <span class="demo-status demo-status--idle">邮箱</span>
+                </div>
+              </section>
+
+              <section class="demo-section motion-item" style="--item-index: 1">
+                <div class="section-heading">
+                  <h2>入口卡片</h2>
+                  <p>测试链接、不可点击状态、长 meta 文本和 hover 反馈。</p>
+                </div>
+
+                <div class="contact-grid">
+                  {contactLinks.map((item) =>
+                    item.href ? (
+                      <a
+                        class="contact-card"
+                        href={item.href}
+                        target={item.href.startsWith("http") ? "_blank" : undefined}
+                        rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+                      >
+                        <div class="contact-card-head">
+                          <h3>{item.label}</h3>
+                          <span class="contact-pill">{item.tag}</span>
+                        </div>
+                        <p>{item.note}</p>
+                        <span class="contact-meta">{item.meta}</span>
+                      </a>
+                    ) : (
+                      <div class="contact-card contact-card--pending">
+                        <div class="contact-card-head">
+                          <h3>{item.label}</h3>
+                          <span class="contact-pill contact-pill--muted">{item.tag}</span>
+                        </div>
+                        <p>{item.note}</p>
+                        <span class="contact-meta">{item.meta}</span>
                       </div>
-                      <p>{item.note}</p>
-                      <span class="contact-meta">{item.meta}</span>
-                    </a>
-                  ) : (
-                    <div class="contact-card contact-card--pending">
-                      <div class="contact-card-head">
-                        <h2>{item.label}</h2>
-                        <span class="contact-pill contact-pill--muted">待补充</span>
-                      </div>
-                      <p>{item.note}</p>
-                      <span class="contact-meta">{item.meta}</span>
-                    </div>
-                  ),
-                )}
-              </div>
-
-              <div class="demo-toolbar" aria-label="状态示例">
-                <span class="demo-status">可用</span>
-                <span class="demo-status demo-status--idle">待补充</span>
-                <span class="demo-status demo-status--soft">低频回复</span>
-                <span class="demo-status">外链</span>
-                <span class="demo-status demo-status--idle">邮箱</span>
-              </div>
-
-              <div class="demo-notices">
-                <p>测试普通说明：联系方式页通常会包含较短的入口、较长的平台说明，以及未来需要替换的真实链接。</p>
-                <p>测试混排说明：Pixiv / Email / Bilibili / 奈月 / 月明かり / natsuki.cloud。</p>
-                <p>测试长链接说明：https://example.com/natsuki/contact/demo/path/with/a/very-long-segment</p>
-              </div>
-
-              <div class="demo-table" aria-label="联系偏好示例">
-                <div>
-                  <span>Business</span>
-                  <strong>hello@natsuki.cloud</strong>
+                    ),
+                  )}
                 </div>
-                <div>
-                  <span>Artwork</span>
-                  <strong>pixiv.net/users/99990012</strong>
-                </div>
-                <div>
-                  <span>Status</span>
-                  <strong>部分平台稍后补充</strong>
-                </div>
-              </div>
+              </section>
 
-              <div class="demo-timeline" aria-label="联系流程示例">
-                {contactTimeline.map((item) => (
-                  <section class="demo-timeline-item">
-                    <time>{item.time}</time>
-                    <div>
-                      <h2>{item.title}</h2>
+              <section class="demo-section demo-section--split motion-item" style="--item-index: 2">
+                <div class="preference-grid">
+                  {contactPreferences.map((item) => (
+                    <section class="preference-card">
+                      <span>{item.value}</span>
+                      <h3>{item.title}</h3>
                       <p>{item.text}</p>
+                    </section>
+                  ))}
+                </div>
+
+                <div class="demo-panel">
+                  <h2>联系说明</h2>
+                  <p>
+                    真实内容替换后，这里可以放联系偏好、回复节奏、合作说明或平台状态。
+                    这个面板比入口卡片更像正文，用来测试复杂内容的阅读质感。
+                  </p>
+                  <ul class="demo-list">
+                    {contactNotes.map((item) => <li>{item}</li>)}
+                  </ul>
+                </div>
+              </section>
+
+              <section class="demo-section motion-item" style="--item-index: 3">
+                <div class="section-heading">
+                  <h2>联系方式表</h2>
+                  <p>测试键值布局、长 URL 和不同文字长度。</p>
+                </div>
+
+                <div class="demo-table" aria-label="联系偏好示例">
+                  {contactRows.map(([label, value]) => (
+                    <div>
+                      <span>{label}</span>
+                      <strong>{value}</strong>
                     </div>
-                  </section>
-                ))}
-              </div>
+                  ))}
+                </div>
+              </section>
 
-              <ul class="demo-list">
-                {contactNotes.map((item) => <li>{item}</li>)}
-              </ul>
+              <section class="demo-section motion-item" style="--item-index: 4">
+                <div class="section-heading">
+                  <h2>联系流程</h2>
+                  <p>比关于页短一些，用来验证两张不同高度卡片之间的过渡。</p>
+                </div>
 
-              <dl class="sample-meta">
-                <div>
-                  <dt>优先级</dt>
-                  <dd>Email > Pixiv > 其他平台</dd>
+                <div class="demo-timeline" aria-label="联系流程示例">
+                  {contactTimeline.map((item) => (
+                    <section class="demo-timeline-item">
+                      <time>{item.time}</time>
+                      <div>
+                        <h3>{item.title}</h3>
+                        <p>{item.text}</p>
+                      </div>
+                    </section>
+                  ))}
                 </div>
-                <div>
-                  <dt>响应</dt>
-                  <dd>普通留言不保证即时回复</dd>
+              </section>
+
+              <section class="demo-section demo-section--split motion-item" style="--item-index: 5">
+                <div class="demo-code" aria-label="链接配置示例">
+                  <span>links.json</span>
+                  <code>{`{
+  "pixiv": "https://www.pixiv.net/users/99990012",
+  "email": "hello@natsuki.cloud",
+  "status": "soft contact"
+}`}</code>
                 </div>
-                <div>
-                  <dt>长文本</dt>
-                  <dd>long-link-and-mixed-content-demo</dd>
-                </div>
-              </dl>
+
+                <dl class="sample-meta">
+                  <div>
+                    <dt>优先级</dt>
+                    <dd>Email > Pixiv > 其他平台</dd>
+                  </div>
+                  <div>
+                    <dt>响应</dt>
+                    <dd>普通留言不保证即时回复</dd>
+                  </div>
+                  <div>
+                    <dt>长文本</dt>
+                    <dd>long-link-and-mixed-content-demo</dd>
+                  </div>
+                </dl>
+              </section>
             </div>
           </article>
         </div>
@@ -422,6 +561,14 @@ const tabs = [
 
     const isTopbarInteractive = () => Boolean(topbar?.matches(":hover, :focus-within"));
 
+    const setTopbarOverlapState = (isOverlapping) => {
+      if (isOverlapping) {
+        shell.dataset.topbarOverlap = "true";
+      } else {
+        delete shell.dataset.topbarOverlap;
+      }
+    };
+
     const isTopbarOverlappingCard = () => {
       const activeCard = shell.querySelector(`[data-card-panel="${shell.dataset.active}"]`);
 
@@ -431,13 +578,20 @@ const tabs = [
 
       const topbarRect = topbar.getBoundingClientRect();
       const cardRect = activeCard.getBoundingClientRect();
-      const overlapPadding = 8;
+      const rootFontSize = Number.parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+      const overlapPadding = rootFontSize * 0.5;
 
       return topbarRect.bottom > cardRect.top + overlapPadding && topbarRect.top < cardRect.bottom - overlapPadding;
     };
 
+    const refreshTopbarOverlapState = () => {
+      const isOverlapping = isTopbarOverlappingCard();
+      setTopbarOverlapState(isOverlapping);
+      return isOverlapping;
+    };
+
     const updateTopbarIdleState = () => {
-      if (isTopbarOverlappingCard() && !isTopbarInteractive()) {
+      if (refreshTopbarOverlapState() && !isTopbarInteractive()) {
         shell.dataset.topbarHidden = "true";
       } else {
         showTopbar();
@@ -450,6 +604,7 @@ const tabs = [
     };
 
     const handleScroll = () => {
+      refreshTopbarOverlapState();
       showTopbar();
       scheduleTopbarIdleState();
     };
@@ -483,6 +638,7 @@ const tabs = [
     const queueHeightUpdate = () => {
       requestAnimationFrame(() => {
         updatePanelHeight();
+        refreshTopbarOverlapState();
         scheduleTopbarIdleState();
       });
     };
@@ -535,6 +691,6 @@ const tabs = [
     setActive(pathToState(), false);
     applyTheme(getStoredTheme() || getSystemTheme());
     document.fonts?.ready?.then(queueHeightUpdate);
-    scheduleTopbarIdleState();
+    requestAnimationFrame(updateTopbarIdleState);
   })();
 </script>
