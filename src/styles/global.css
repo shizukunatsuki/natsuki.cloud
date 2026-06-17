@@ -521,6 +521,10 @@ html[data-theme="dark"] .demo-status--soft {
   align-items: stretch;
 }
 
+.demo-section--split > * {
+  min-inline-size: 0;
+}
+
 .demo-section--split .sample-meta {
   grid-template-columns: 1fr;
 }
@@ -737,6 +741,14 @@ html[data-theme="dark"] .demo-table div + div {
 .demo-notices {
   display: grid;
   gap: 0.62rem;
+  min-inline-size: 0;
+  inline-size: 100%;
+}
+
+.demo-notices p {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  padding: 0.86rem 1rem;
 }
 
 .demo-timeline {
@@ -795,6 +807,11 @@ html[data-theme="dark"] .demo-timeline-item time {
   font-size: 0.86rem;
   font-weight: 700;
   cursor: pointer;
+  transition:
+    transform 220ms var(--spring),
+    border-color 180ms ease,
+    background 180ms ease,
+    color 180ms ease;
 }
 
 html[data-theme="dark"] .demo-code button,
@@ -806,6 +823,28 @@ html[data-theme="dark"] .demo-button {
 .demo-code button {
   flex: 0 0 auto;
   padding-inline: 0.78rem;
+}
+
+.demo-code button:hover,
+.demo-code button:focus-visible,
+.demo-button:hover,
+.demo-button:focus-visible {
+  transform: translateY(-0.08rem);
+  border-color: rgb(126 96 132 / 20%);
+  background: rgb(255 255 255 / 60%);
+}
+
+html[data-theme="dark"] .demo-code button:hover,
+html[data-theme="dark"] .demo-code button:focus-visible,
+html[data-theme="dark"] .demo-button:hover,
+html[data-theme="dark"] .demo-button:focus-visible {
+  border-color: rgb(239 220 255 / 20%);
+  background: rgb(255 255 255 / 12%);
+}
+
+.demo-code button:active,
+.demo-button:active {
+  transform: translateY(0.02rem) scale(0.98);
 }
 
 .demo-code pre {
@@ -874,18 +913,35 @@ html[data-theme="dark"] .link-list a {
 }
 
 .demo-button--primary {
-  border-color: rgb(243 165 196 / 34%);
-  background: rgb(255 230 241 / 72%);
+  border-color: rgb(173 153 214 / 34%);
+  background: rgb(235 229 255 / 76%);
+  color: #5f4e78;
 }
 
 html[data-theme="dark"] .demo-button--primary {
-  border-color: rgb(240 160 191 / 28%);
-  background: rgb(141 72 100 / 28%);
+  border-color: rgb(199 176 239 / 30%);
+  background: rgb(88 68 112 / 32%);
+  color: #eadfff;
 }
 
 .demo-button:disabled {
   color: rgb(127 113 133 / 66%);
   cursor: not-allowed;
+}
+
+.demo-button:disabled:hover,
+.demo-button:disabled:focus-visible,
+.demo-button:disabled:active {
+  transform: none;
+  border-color: rgb(126 96 132 / 12%);
+  background: rgb(255 255 255 / 44%);
+}
+
+html[data-theme="dark"] .demo-button:disabled:hover,
+html[data-theme="dark"] .demo-button:disabled:focus-visible,
+html[data-theme="dark"] .demo-button:disabled:active {
+  border-color: rgb(239 220 255 / 12%);
+  background: rgb(255 255 255 / 8%);
 }
 
 .sample-meta dt {

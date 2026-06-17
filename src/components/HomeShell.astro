@@ -593,6 +593,7 @@ const tabs = [
     const themeStorageKey = "natsuki-theme";
     const topbarIdleDelay = 820;
     let topbarIdleTimer = 0;
+    let pendingTabSwitch = 0;
     const darkScheme = matchMedia("(prefers-color-scheme: dark)");
     const themeColors = {
       light: "#fff4f8",
@@ -686,6 +687,49 @@ const tabs = [
       scheduleTopbarIdleState();
     };
 
+    const prefersReducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const waitForScrollTop = () => new Promise((resolve) => {
+      if (window.scrollY <= 1 || prefersReducedMotion()) {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+        resolve();
+        return;
+      }
+
+      const startedAt = Date.now();
+      const timeout = 1200;
+
+      const check = () => {
+        if (window.scrollY <= 1 || Date.now() - startedAt > timeout) {
+          resolve();
+          return;
+        }
+
+        requestAnimationFrame(check);
+      };
+
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      requestAnimationFrame(check);
+    });
+
+    const switchAfterTop = async (next, shouldPush = false) => {
+      const active = next === "find" ? "find" : "about";
+
+      if (active === shell.dataset.active) {
+        return;
+      }
+
+      const switchId = ++pendingTabSwitch;
+      showTopbar();
+      await waitForScrollTop();
+
+      if (switchId !== pendingTabSwitch) {
+        return;
+      }
+
+      setActive(active, shouldPush, false);
+    };
+
     const copyText = async (text) => {
       try {
         await navigator.clipboard.writeText(text);
@@ -760,7 +804,7 @@ const tabs = [
     links.forEach((link) => {
       link.addEventListener("click", (event) => {
         event.preventDefault();
-        setActive(link.dataset.tabTarget, true, true);
+        switchAfterTop(link.dataset.tabTarget, true);
       });
     });
 
@@ -817,7 +861,7 @@ const tabs = [
     });
 
     window.addEventListener("popstate", () => {
-      setActive(pathToState(), false, true);
+      switchAfterTop(pathToState(), false);
     });
 
     window.addEventListener("scroll", handleScroll, { passive: true });
