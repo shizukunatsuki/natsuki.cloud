@@ -125,6 +125,8 @@ a {
 }
 
 .topbar {
+  --topbar-shift: 0;
+  --topbar-opacity: 1;
   position: sticky;
   inset-block-start: clamp(0.75rem, 2dvh, 1.2rem);
   z-index: 10;
@@ -140,12 +142,27 @@ a {
   background: rgb(255 253 253 / 76%);
   box-shadow: 0 0.85rem 1.8rem rgb(85 55 85 / 8%);
   backdrop-filter: blur(1rem) saturate(1.04);
+  opacity: var(--topbar-opacity);
+  transform: translateY(var(--topbar-shift));
+  transition:
+    transform 420ms var(--slide-ease),
+    opacity 220ms ease,
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+  will-change: transform, opacity;
 }
 
 html[data-theme="dark"] .topbar {
   border-color: rgb(239 220 255 / 12%);
   background: rgb(28 21 38 / 74%);
   box-shadow: 0 0.9rem 2rem rgb(0 0 0 / 22%);
+}
+
+.page-shell[data-topbar-hidden="true"] .topbar {
+  --topbar-shift: calc(-100% - 1rem);
+  --topbar-opacity: 0;
+  pointer-events: none;
 }
 
 .topbar::before,

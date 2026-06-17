@@ -371,9 +371,12 @@ const tabs = [
 
     const links = [...shell.querySelectorAll("[data-tab-target]")];
     const stage = shell.querySelector(".card-stage");
+    const topbar = shell.querySelector(".topbar");
     const themeToggle = shell.querySelector("[data-theme-toggle]");
     const pathToState = () => location.pathname.startsWith("/find") ? "find" : "about";
     const themeStorageKey = "natsuki-theme";
+    const topbarIdleDelay = 820;
+    let topbarIdleTimer = 0;
     const darkScheme = matchMedia("(prefers-color-scheme: dark)");
     const themeColors = {
       light: "#fff4f8",
@@ -412,6 +415,45 @@ const tabs = [
       stage.style.setProperty("--active-panel-block-size", `${panelBlockSize}rem`);
     };
 
+    const showTopbar = () => {
+      window.clearTimeout(topbarIdleTimer);
+      delete shell.dataset.topbarHidden;
+    };
+
+    const isTopbarInteractive = () => Boolean(topbar?.matches(":hover, :focus-within"));
+
+    const isTopbarOverlappingCard = () => {
+      const activeCard = shell.querySelector(`[data-card-panel="${shell.dataset.active}"]`);
+
+      if (!topbar || !activeCard) {
+        return false;
+      }
+
+      const topbarRect = topbar.getBoundingClientRect();
+      const cardRect = activeCard.getBoundingClientRect();
+      const overlapPadding = 8;
+
+      return topbarRect.bottom > cardRect.top + overlapPadding && topbarRect.top < cardRect.bottom - overlapPadding;
+    };
+
+    const updateTopbarIdleState = () => {
+      if (isTopbarOverlappingCard() && !isTopbarInteractive()) {
+        shell.dataset.topbarHidden = "true";
+      } else {
+        showTopbar();
+      }
+    };
+
+    const scheduleTopbarIdleState = () => {
+      window.clearTimeout(topbarIdleTimer);
+      topbarIdleTimer = window.setTimeout(updateTopbarIdleState, topbarIdleDelay);
+    };
+
+    const handleScroll = () => {
+      showTopbar();
+      scheduleTopbarIdleState();
+    };
+
     const setActive = (next, shouldPush = false, shouldResetScroll = false) => {
       const active = next === "find" ? "find" : "about";
 
@@ -419,6 +461,7 @@ const tabs = [
         window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       }
 
+      showTopbar();
       updatePanelHeight(active);
       shell.dataset.active = active;
 
@@ -438,7 +481,10 @@ const tabs = [
     };
 
     const queueHeightUpdate = () => {
-      requestAnimationFrame(() => updatePanelHeight());
+      requestAnimationFrame(() => {
+        updatePanelHeight();
+        scheduleTopbarIdleState();
+      });
     };
 
     links.forEach((link) => {
@@ -474,7 +520,12 @@ const tabs = [
       setActive(pathToState(), false, true);
     });
 
+    window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", queueHeightUpdate);
+    topbar?.addEventListener("pointerenter", showTopbar);
+    topbar?.addEventListener("pointerleave", scheduleTopbarIdleState);
+    topbar?.addEventListener("focusin", showTopbar);
+    topbar?.addEventListener("focusout", scheduleTopbarIdleState);
 
     if ("ResizeObserver" in window) {
       const resizeObserver = new ResizeObserver(queueHeightUpdate);
@@ -484,5 +535,6 @@ const tabs = [
     setActive(pathToState(), false);
     applyTheme(getStoredTheme() || getSystemTheme());
     document.fonts?.ready?.then(queueHeightUpdate);
+    scheduleTopbarIdleState();
   })();
 </script>
