@@ -261,6 +261,7 @@ html[data-theme="dark"] .moon-icon {
   border-radius: var(--radius-pill);
   overflow: clip;
   background: transparent;
+  touch-action: pan-y pinch-zoom;
 }
 
 .topnav-indicator {
@@ -270,9 +271,11 @@ html[data-theme="dark"] .moon-icon {
   inline-size: calc((100% - var(--slider-pad) * 2) / 2);
   border-radius: var(--radius-pill);
   background: rgb(255 230 241 / 82%);
+  transform: translateX(var(--indicator-swipe-offset, 0px));
   transition:
     transform var(--slide-duration) var(--spring),
     background 180ms ease;
+  will-change: transform;
 }
 
 html[data-theme="dark"] .topnav-indicator {
@@ -280,7 +283,7 @@ html[data-theme="dark"] .topnav-indicator {
 }
 
 [data-active="find"] .topnav-indicator {
-  transform: translateX(100%);
+  transform: translateX(100%) translateX(var(--indicator-swipe-offset, 0px));
 }
 
 .topnav a {
@@ -317,6 +320,7 @@ html[data-theme="dark"] .topnav-indicator {
   inline-size: 100vw;
   margin-inline: calc(50% - 50vw);
   overflow: hidden;
+  touch-action: pan-y pinch-zoom;
   transition: block-size var(--slide-duration) var(--slide-ease);
 }
 
@@ -329,13 +333,18 @@ html[data-theme="dark"] .topnav-indicator {
   display: flex;
   align-items: flex-start;
   inline-size: 200vw;
-  transform: translateX(0%);
+  transform: translateX(var(--card-swipe-offset, 0px));
   transition: transform var(--slide-duration) var(--spring);
   will-change: transform;
 }
 
 [data-active="find"] .card-track {
-  transform: translateX(-100vw);
+  transform: translateX(-100vw) translateX(var(--card-swipe-offset, 0px));
+}
+
+[data-swiping="true"] .card-track,
+[data-swiping="true"] .topnav-indicator {
+  transition-duration: 0ms;
 }
 
 .card-panel {

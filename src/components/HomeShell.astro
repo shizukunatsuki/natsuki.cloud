@@ -379,6 +379,8 @@ const externalLinkAttributes = (href: string) =>
     const links = [...shell.querySelectorAll("[data-tab-target]")];
     const stage = shell.querySelector(".card-stage");
     const topbar = shell.querySelector(".topbar");
+    const topnav = shell.querySelector(".topnav");
+    const topnavIndicator = shell.querySelector(".topnav-indicator");
     const themeToggle = shell.querySelector("[data-theme-toggle]");
     const copyButtons = [...shell.querySelectorAll("[data-copy-button]")];
     const actionButtons = [...shell.querySelectorAll("[data-demo-action]")];
@@ -393,6 +395,8 @@ const externalLinkAttributes = (href: string) =>
     const themeColors = themeConfig.colors;
     let keyboardNavigationActive = false;
     let topbarPointerHoverActive = false;
+    let activeSwipe = null;
+    let suppressClickUntil = 0;
 
     const getStoredTheme = () => {
       try {
@@ -538,6 +542,130 @@ const externalLinkAttributes = (href: string) =>
       setActive(active, shouldPush, false);
       scrollToTopAfterSwitch();
     };
+
+    const setSwipeOffset = (rawOffset) => {
+      const isAtStart = shell.dataset.active === "about" && rawOffset > 0;
+      const isAtEnd = shell.dataset.active === "find" && rawOffset < 0;
+      const offset = isAtStart || isAtEnd ? rawOffset * 0.24 : rawOffset;
+      const indicatorWidth = topnavIndicator?.getBoundingClientRect().width || 0;
+      const indicatorOffset = offset / Math.max(window.innerWidth, 1) * indicatorWidth;
+
+      shell.style.setProperty("--card-swipe-offset", `${offset}px`);
+      shell.style.setProperty("--indicator-swipe-offset", `${indicatorOffset}px`);
+    };
+
+    const clearSwipeStyles = () => {
+      delete shell.dataset.swiping;
+      shell.style.removeProperty("--card-swipe-offset");
+      shell.style.removeProperty("--indicator-swipe-offset");
+    };
+
+    const finishSwipe = (event, allowCommit = true) => {
+      const swipe = activeSwipe;
+
+      if (!swipe || event.pointerId !== swipe.pointerId) {
+        return;
+      }
+
+      activeSwipe = null;
+      try {
+        if (swipe.surface.hasPointerCapture?.(event.pointerId)) {
+          swipe.surface.releasePointerCapture(event.pointerId);
+        }
+      } catch {
+        // Pointer capture can already be gone after a system gesture takes over.
+      }
+
+      if (swipe.axis !== "horizontal") {
+        clearSwipeStyles();
+        scheduleTopbarIdleState();
+        return;
+      }
+
+      const distance = event.clientX - swipe.startX;
+      const elapsed = Math.max(event.timeStamp - swipe.startedAt, 1);
+      const velocity = distance / elapsed;
+      const distanceThreshold = Math.min(96, window.innerWidth * 0.2);
+      const hasIntent = Math.abs(distance) >= distanceThreshold
+        || (Math.abs(distance) >= 28 && Math.abs(velocity) >= 0.45);
+      const target = distance < 0 ? "find" : "about";
+      const canSwitch = target !== shell.dataset.active;
+
+      suppressClickUntil = performance.now() + 420;
+      clearSwipeStyles();
+
+      if (allowCommit && hasIntent && canSwitch) {
+        switchThenScroll(target, true);
+      } else {
+        scheduleTopbarIdleState();
+      }
+    };
+
+    const beginSwipe = (event) => {
+      if (event.pointerType !== "touch" || !event.isPrimary || activeSwipe) {
+        return;
+      }
+
+      cancelScrollToTop();
+      showTopbar();
+      activeSwipe = {
+        axis: null,
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        startedAt: event.timeStamp,
+        surface: event.currentTarget,
+      };
+      try {
+        event.currentTarget.setPointerCapture?.(event.pointerId);
+      } catch {
+        // Continue without capture when the browser rejects a synthetic or interrupted pointer.
+      }
+    };
+
+    const moveSwipe = (event) => {
+      const swipe = activeSwipe;
+
+      if (!swipe || event.pointerId !== swipe.pointerId) {
+        return;
+      }
+
+      const offsetX = event.clientX - swipe.startX;
+      const offsetY = event.clientY - swipe.startY;
+
+      if (!swipe.axis) {
+        if (Math.max(Math.abs(offsetX), Math.abs(offsetY)) < 8) {
+          return;
+        }
+
+        swipe.axis = Math.abs(offsetX) > Math.abs(offsetY) * 1.12 ? "horizontal" : "vertical";
+
+        if (swipe.axis === "horizontal") {
+          shell.dataset.swiping = "true";
+        }
+      }
+
+      if (swipe.axis !== "horizontal") {
+        return;
+      }
+
+      event.preventDefault();
+      setSwipeOffset(offsetX);
+    };
+
+    [stage, topnav].filter(Boolean).forEach((surface) => {
+      surface.addEventListener("pointerdown", beginSwipe);
+      surface.addEventListener("pointermove", moveSwipe);
+      surface.addEventListener("pointerup", (event) => finishSwipe(event));
+      surface.addEventListener("pointercancel", (event) => finishSwipe(event, false));
+    });
+
+    shell.addEventListener("click", (event) => {
+      if (performance.now() < suppressClickUntil) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    }, true);
 
     const copyText = async (text) => {
       try {
