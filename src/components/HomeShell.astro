@@ -391,6 +391,8 @@ const externalLinkAttributes = (href: string) =>
     let scrollAnimationFrame = 0;
     const darkScheme = matchMedia(themeConfig.darkQuery);
     const themeColors = themeConfig.colors;
+    let keyboardNavigationActive = false;
+    let topbarPointerHoverActive = false;
 
     const getStoredTheme = () => {
       try {
@@ -429,7 +431,10 @@ const externalLinkAttributes = (href: string) =>
       delete shell.dataset.topbarHidden;
     };
 
-    const isTopbarInteractive = () => Boolean(topbar?.matches(":hover, :focus-within"));
+    const isTopbarInteractive = () => Boolean(topbar && (
+      topbarPointerHoverActive
+      || (keyboardNavigationActive && topbar.matches(":focus-within"))
+    ));
 
     const setTopbarOverlapState = (isOverlapping) => {
       if (isOverlapping) {
@@ -692,9 +697,34 @@ const externalLinkAttributes = (href: string) =>
     window.addEventListener("wheel", cancelScrollToTop, { passive: true });
     window.addEventListener("touchstart", cancelScrollToTop, { passive: true });
     window.addEventListener("resize", queueHeightUpdate);
-    topbar?.addEventListener("pointerenter", showTopbar);
-    topbar?.addEventListener("pointerleave", scheduleTopbarIdleState);
-    topbar?.addEventListener("focusin", showTopbar);
+    window.addEventListener("pointerdown", (event) => {
+      keyboardNavigationActive = false;
+      if (event.pointerType !== "mouse") {
+        topbarPointerHoverActive = false;
+      }
+    }, { capture: true, passive: true });
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Tab") {
+        keyboardNavigationActive = true;
+      }
+    }, { capture: true });
+    topbar?.addEventListener("pointerenter", (event) => {
+      if (event.pointerType === "mouse") {
+        topbarPointerHoverActive = true;
+        showTopbar();
+      }
+    });
+    topbar?.addEventListener("pointerleave", (event) => {
+      if (event.pointerType === "mouse") {
+        topbarPointerHoverActive = false;
+        scheduleTopbarIdleState();
+      }
+    });
+    topbar?.addEventListener("focusin", () => {
+      if (keyboardNavigationActive) {
+        showTopbar();
+      }
+    });
     topbar?.addEventListener("focusout", scheduleTopbarIdleState);
 
     if ("ResizeObserver" in window) {
