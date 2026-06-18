@@ -385,8 +385,10 @@ const externalLinkAttributes = (href: string) =>
     const pathToState = () => location.pathname.startsWith("/find") ? "find" : "about";
     const themeStorageKey = themeConfig.storageKey;
     const topbarIdleDelay = 820;
+    const scrollStartDelay = 72;
     let topbarIdleTimer = 0;
-    let pendingTabSwitch = 0;
+    let scrollStartTimer = 0;
+    let scrollAnimationFrame = 0;
     const darkScheme = matchMedia(themeConfig.darkQuery);
     const themeColors = themeConfig.colors;
 
@@ -479,45 +481,57 @@ const externalLinkAttributes = (href: string) =>
 
     const prefersReducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const waitForScrollTop = () => new Promise((resolve) => {
-      if (window.scrollY <= 1 || prefersReducedMotion()) {
-        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-        resolve();
+    const cancelScrollToTop = () => {
+      window.clearTimeout(scrollStartTimer);
+      cancelAnimationFrame(scrollAnimationFrame);
+      scrollStartTimer = 0;
+      scrollAnimationFrame = 0;
+    };
+
+    const scrollToTopAfterSwitch = () => {
+      cancelScrollToTop();
+
+      if (window.scrollY <= 1) {
         return;
       }
 
-      const startedAt = Date.now();
-      const timeout = 1200;
+      if (prefersReducedMotion()) {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+        return;
+      }
 
-      const check = () => {
-        if (window.scrollY <= 1 || Date.now() - startedAt > timeout) {
-          resolve();
-          return;
-        }
+      scrollStartTimer = window.setTimeout(() => {
+        const startTop = window.scrollY;
+        const distanceInViewports = startTop / Math.max(window.innerHeight, 1);
+        const duration = Math.min(720, 480 + distanceInViewports * 120);
+        const startedAt = performance.now();
 
-        requestAnimationFrame(check);
-      };
+        const step = (now) => {
+          const progress = Math.min((now - startedAt) / duration, 1);
+          const easedProgress = 1 - Math.pow(1 - progress, 4);
+          window.scrollTo({ top: startTop * (1 - easedProgress), left: 0, behavior: "auto" });
 
-      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-      requestAnimationFrame(check);
-    });
+          if (progress < 1) {
+            scrollAnimationFrame = requestAnimationFrame(step);
+          } else {
+            scrollAnimationFrame = 0;
+          }
+        };
 
-    const switchAfterTop = async (next, shouldPush = false) => {
+        scrollAnimationFrame = requestAnimationFrame(step);
+      }, scrollStartDelay);
+    };
+
+    const switchThenScroll = (next, shouldPush = false) => {
       const active = next === "find" ? "find" : "about";
 
       if (active === shell.dataset.active) {
         return;
       }
 
-      const switchId = ++pendingTabSwitch;
       showTopbar();
-      await waitForScrollTop();
-
-      if (switchId !== pendingTabSwitch) {
-        return;
-      }
-
       setActive(active, shouldPush, false);
+      scrollToTopAfterSwitch();
     };
 
     const copyText = async (text) => {
@@ -607,7 +621,7 @@ const externalLinkAttributes = (href: string) =>
     links.forEach((link) => {
       link.addEventListener("click", (event) => {
         event.preventDefault();
-        switchAfterTop(link.dataset.tabTarget, true);
+        switchThenScroll(link.dataset.tabTarget, true);
       });
     });
 
@@ -671,10 +685,12 @@ const externalLinkAttributes = (href: string) =>
     }
 
     window.addEventListener("popstate", () => {
-      switchAfterTop(pathToState(), false);
+      switchThenScroll(pathToState(), false);
     });
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("wheel", cancelScrollToTop, { passive: true });
+    window.addEventListener("touchstart", cancelScrollToTop, { passive: true });
     window.addEventListener("resize", queueHeightUpdate);
     topbar?.addEventListener("pointerenter", showTopbar);
     topbar?.addEventListener("pointerleave", scheduleTopbarIdleState);
