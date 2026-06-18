@@ -548,7 +548,7 @@ const externalLinkAttributes = (href: string) =>
       const isAtEnd = shell.dataset.active === "find" && rawOffset < 0;
       const offset = isAtStart || isAtEnd ? rawOffset * 0.24 : rawOffset;
       const indicatorWidth = topnavIndicator?.getBoundingClientRect().width || 0;
-      const indicatorOffset = offset / Math.max(window.innerWidth, 1) * indicatorWidth;
+      const indicatorOffset = -offset / Math.max(window.innerWidth, 1) * indicatorWidth;
 
       shell.style.setProperty("--card-swipe-offset", `${offset}px`);
       shell.style.setProperty("--indicator-swipe-offset", `${indicatorOffset}px`);
