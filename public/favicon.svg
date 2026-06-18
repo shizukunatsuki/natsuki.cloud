@@ -1,8 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="natsuki.cloud">
-  <rect width="64" height="64" rx="16" fill="#fff4f8"/>
-  <path d="M20 25 13 11l16 8ZM44 25l7-14-16 8Z" fill="#211d26"/>
-  <circle cx="32" cy="34" r="17" fill="#2d2532"/>
-  <circle cx="25" cy="32" r="3.2" fill="#b9a2d8"/>
-  <circle cx="39" cy="32" r="3.2" fill="#b9a2d8"/>
-  <path d="M29 41c2 2 4 2 6 0" fill="none" stroke="#f3a6c8" stroke-width="3" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-label="natsuki.cloud">
+  <style>
+    path { fill: #6f5a77; }
+    @media (prefers-color-scheme: dark) { path { fill: #d8c6ee; } }
+  </style>
+  <path d="M19.5 14.5A8.5 8.5 0 0 1 9.5 4.5a8.5 8.5 0 1 0 10 10Z"/>
 </svg>

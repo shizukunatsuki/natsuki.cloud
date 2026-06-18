@@ -271,7 +271,7 @@ html[data-theme="dark"] .moon-icon {
   inline-size: calc((100% - var(--slider-pad) * 2) / 2);
   border-radius: var(--radius-pill);
   background: rgb(255 230 241 / 82%);
-  transform: translateX(var(--indicator-swipe-offset, 0px));
+  transform: translateX(var(--indicator-swipe-offset, 0rem));
   transition:
     transform var(--slide-duration) var(--spring),
     background 180ms ease;
@@ -283,7 +283,7 @@ html[data-theme="dark"] .topnav-indicator {
 }
 
 [data-active="find"] .topnav-indicator {
-  transform: translateX(100%) translateX(var(--indicator-swipe-offset, 0px));
+  transform: translateX(100%) translateX(var(--indicator-swipe-offset, 0rem));
 }
 
 .topnav a {
@@ -333,13 +333,13 @@ html[data-theme="dark"] .topnav-indicator {
   display: flex;
   align-items: flex-start;
   inline-size: 200vw;
-  transform: translateX(var(--card-swipe-offset, 0px));
+  transform: translateX(var(--card-swipe-offset, 0rem));
   transition: transform var(--slide-duration) var(--spring);
   will-change: transform;
 }
 
 [data-active="find"] .card-track {
-  transform: translateX(-100vw) translateX(var(--card-swipe-offset, 0px));
+  transform: translateX(-100vw) translateX(var(--card-swipe-offset, 0rem));
 }
 
 [data-swiping="true"] .card-track,

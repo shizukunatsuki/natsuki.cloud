@@ -408,6 +408,7 @@ const externalLinkAttributes = (href: string) =>
     };
 
     const getSystemTheme = () => darkScheme.matches ? "dark" : "light";
+    const getRootFontSize = () => Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
 
     const applyTheme = (theme) => {
       const activeTheme = theme === "dark" ? "dark" : "light";
@@ -425,8 +426,7 @@ const externalLinkAttributes = (href: string) =>
         return;
       }
 
-      const rootFontSize = Number.parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-      const panelBlockSize = card.getBoundingClientRect().height / rootFontSize;
+      const panelBlockSize = card.getBoundingClientRect().height / getRootFontSize();
       stage.style.setProperty("--active-panel-block-size", `${panelBlockSize}rem`);
     };
 
@@ -457,8 +457,7 @@ const externalLinkAttributes = (href: string) =>
 
       const topbarRect = topbar.getBoundingClientRect();
       const cardRect = activeCard.getBoundingClientRect();
-      const rootFontSize = Number.parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-      const overlapPadding = rootFontSize * 0.5;
+      const overlapPadding = getRootFontSize() * 0.5;
 
       return topbarRect.bottom > cardRect.top + overlapPadding && topbarRect.top < cardRect.bottom - overlapPadding;
     };
@@ -549,9 +548,10 @@ const externalLinkAttributes = (href: string) =>
       const offset = isAtStart || isAtEnd ? rawOffset * 0.24 : rawOffset;
       const indicatorWidth = topnavIndicator?.getBoundingClientRect().width || 0;
       const indicatorOffset = -offset / Math.max(window.innerWidth, 1) * indicatorWidth;
+      const rootFontSize = getRootFontSize();
 
-      shell.style.setProperty("--card-swipe-offset", `${offset}px`);
-      shell.style.setProperty("--indicator-swipe-offset", `${indicatorOffset}px`);
+      shell.style.setProperty("--card-swipe-offset", `${offset / rootFontSize}rem`);
+      shell.style.setProperty("--indicator-swipe-offset", `${indicatorOffset / rootFontSize}rem`);
     };
 
     const clearSwipeStyles = () => {
@@ -585,9 +585,10 @@ const externalLinkAttributes = (href: string) =>
       const distance = event.clientX - swipe.startX;
       const elapsed = Math.max(event.timeStamp - swipe.startedAt, 1);
       const velocity = distance / elapsed;
-      const distanceThreshold = Math.min(96, window.innerWidth * 0.2);
+      const rootFontSize = getRootFontSize();
+      const distanceThreshold = Math.min(rootFontSize * 6, window.innerWidth * 0.2);
       const hasIntent = Math.abs(distance) >= distanceThreshold
-        || (Math.abs(distance) >= 28 && Math.abs(velocity) >= 0.45);
+        || (Math.abs(distance) >= rootFontSize * 1.75 && Math.abs(velocity) >= 0.45);
       const target = distance < 0 ? "find" : "about";
       const canSwitch = target !== shell.dataset.active;
 
@@ -634,7 +635,7 @@ const externalLinkAttributes = (href: string) =>
       const offsetY = event.clientY - swipe.startY;
 
       if (!swipe.axis) {
-        if (Math.max(Math.abs(offsetX), Math.abs(offsetY)) < 8) {
+        if (Math.max(Math.abs(offsetX), Math.abs(offsetY)) < getRootFontSize() * 0.5) {
           return;
         }
 
